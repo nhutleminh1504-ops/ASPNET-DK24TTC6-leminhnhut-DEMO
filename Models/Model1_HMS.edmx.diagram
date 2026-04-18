@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="60ddfbe16eb94e4689d55eb8e4910688" Name="Diagram1" ZoomLevel="71">
+        <EntityTypeShape EntityType="doanKSModel.CTPhieuDatPhong" Width="1.5" PointX="5.25" PointY="2.625" />
+        <EntityTypeShape EntityType="doanKSModel.CTPhieuThuePhong" Width="1.5" PointX="10.5" PointY="4.375" />
+        <EntityTypeShape EntityType="doanKSModel.DanhSachQuyen" Width="1.5" PointX="6" PointY="13.625" />
+        <EntityTypeShape EntityType="doanKSModel.DichVu" Width="1.5" PointX="8.25" PointY="0.75" />
+        <EntityTypeShape EntityType="doanKSModel.HoaDon" Width="1.5" PointX="3" PointY="6.5" />
+        <EntityTypeShape EntityType="doanKSModel.KhachHang" Width="1.5" PointX="0.75" PointY="2.125" />
+        <EntityTypeShape EntityType="doanKSModel.LienHe" Width="1.5" PointX="8.75" PointY="8.875" />
+        <EntityTypeShape EntityType="doanKSModel.LoaiPhong" Width="1.5" PointX="0.75" PointY="10.5" />
+        <EntityTypeShape EntityType="doanKSModel.NhanVien" Width="1.5" PointX="0.75" PointY="6" />
+        <EntityTypeShape EntityType="doanKSModel.NhomNhanVien" Width="1.5" PointX="3.75" PointY="13.75" />
+        <EntityTypeShape EntityType="doanKSModel.PhanHoi" Width="1.5" PointX="5.75" PointY="9.875" />
+        <EntityTypeShape EntityType="doanKSModel.PhieuDatPhong" Width="1.5" PointX="3" PointY="2" />
+        <EntityTypeShape EntityType="doanKSModel.PhieuThuePhong" Width="1.5" PointX="8.25" PointY="4.125" />
+        <EntityTypeShape EntityType="doanKSModel.Phong" Width="1.5" PointX="3" PointY="10.5" />
+        <EntityTypeShape EntityType="doanKSModel.QuanTri" Width="1.5" PointX="6" PointY="6.5" />
+        <EntityTypeShape EntityType="doanKSModel.Quyen" Width="1.5" PointX="3.75" PointY="16.875" />
+        <AssociationConnector Association="doanKSModel.ctpdp_p_fk" />
+        <AssociationConnector Association="doanKSModel.ctpdp_pdp_fk" />
+        <AssociationConnector Association="doanKSModel.ctptp_dv_fk" />
+        <AssociationConnector Association="doanKSModel.ctptp_p_fk" />
+        <AssociationConnector Association="doanKSModel.ctptp_ptp_fk" />
+        <AssociationConnector Association="doanKSModel.FK_DanhSachQuyen_NhomNhanVien" />
+        <AssociationConnector Association="doanKSModel.FK_DanhSachQuyen_Quyen" />
+        <AssociationConnector Association="doanKSModel.hd_nv_fk" />
+        <AssociationConnector Association="doanKSModel.hd_ptp_fk" />
+        <AssociationConnector Association="doanKSModel.pdp_kh_fk" />
+        <AssociationConnector Association="doanKSModel.ptp_kh_fk" />
+        <AssociationConnector Association="doanKSModel.p_lp_fk" />
+        <AssociationConnector Association="doanKSModel.pdp_nv_fk" />
+        <AssociationConnector Association="doanKSModel.ptp_nv_fk" />
+        <AssociationConnector Association="doanKSModel.qt_nv_fk" />
+        <AssociationConnector Association="doanKSModel.qt_nnv_fk" />
+        <AssociationConnector Association="doanKSModel.ptp_pdp_fk" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
