@@ -7,7 +7,13 @@ Hệ thống giúp số hóa quy trình quản lý phòng, khách hàng, đặt 
 - Họ và tên: Lê Minh Nhựt  
 - MSSV: 170124697  
 - Lớp: DK24TTC6
-- ## Chức năng chính
+- ## 🎯 Mục tiêu đề tài
+- Xây dựng website đặt phòng khách sạn
+- Ứng dụng công nghệ ASP.NET vào phát triển web
+- Sử dụng SQL Server để quản lý dữ liệu
+- Nâng cao hiệu quả quản lý khách sạn
+- Tăng trải nghiệm người dùng khi đặt phòng online
+  ## Chức năng chính
 ### Khách hàng
 - Xem thông tin khách sạn
 - Xem danh sách phòng
