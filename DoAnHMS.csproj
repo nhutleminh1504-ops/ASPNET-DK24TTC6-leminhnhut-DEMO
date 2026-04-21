@@ -2266,7 +2266,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
-    <Content Include="Views\Shared\_LayoutAdmin.cshtml" />
     <Content Include="Views\Shared\401.cshtml" />
     <Content Include="Views\PhieuDatPhongs\Create.cshtml" />
     <Content Include="Views\PhieuDatPhongs\Delete.cshtml" />
@@ -2344,6 +2343,7 @@
     <Content Include="Views\NhanViens\Search.cshtml" />
     <Content Include="Views\ThongKe\ByDichVu.cshtml" />
     <Content Include="Views\Hotel\DatPhong.cshtml" />
+    <Content Include="Views\Shared\_LayoutAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

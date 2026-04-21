@@ -1,104 +1,246 @@
-﻿@model List<DoAnHMS.Models.CTPhieuThuePhong>
+﻿@model List<DoAnHMS.Models.Phong>
+
 @{
-    ViewBag.Title = "Kiểm tra phòng trống";
+    ViewBag.Title = "Kiểm Tra Phòng Trống";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
-    var grid = new WebGrid(Model, defaultSort: "maP");
 }
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>TimKiem</title>
-    <style type="text/css">
-        .grid-footer {
-            color: #000;
-            font: 17px Calibri;
+<style>
+    body {
+        background: #f4f6f9;
+    }
+
+    .page-wrap {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 20px;
+    }
+
+    .title-box {
+        background: linear-gradient(135deg,#0d6efd,#0b5ed7);
+        color: white;
+        padding: 22px 30px;
+        border-radius: 14px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        margin-bottom: 25px;
+    }
+
+        .title-box h2 {
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: .5px;
+        }
+
+    .search-card {
+        background: white;
+        border-radius: 14px;
+        padding: 30px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+    }
+
+    .row-form {
+        display: grid;
+        grid-template-columns: 160px 1fr;
+        gap: 15px;
+        align-items: center;
+        margin-bottom: 18px;
+    }
+
+        .row-form label {
+            font-weight: 600;
+            color: #333;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #d0d7de;
+        border-radius: 10px;
+        font-size: 15px;
+    }
+
+    .btn-zone {
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    .btn-custom {
+        border: none;
+        padding: 10px 24px;
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+        margin: 0 5px;
+        transition: .25s;
+        cursor: pointer;
+    }
+
+    .btn-search {
+        background: #198754;
+    }
+
+        .btn-search:hover {
+            background: #157347;
+            transform: translateY(-2px);
+        }
+
+    .btn-reset {
+        background: #0d6efd;
+    }
+
+        .btn-reset:hover {
+            background: #0b5ed7;
+            transform: translateY(-2px);
+        }
+
+    .btn-back {
+        background: #6c757d;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-back:hover {
+            background: #5c636a;
+            color: white;
+        }
+
+    .result-card {
+        background: white;
+        border-radius: 14px;
+        padding: 25px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    .table-room {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+        border-radius: 12px;
+    }
+
+        .table-room thead {
+            background: #0d6efd;
+            color: white;
+        }
+
+        .table-room th,
+        .table-room td {
+            padding: 14px;
             text-align: center;
-            font-weight: bold;
+            border-bottom: 1px solid #e9ecef;
         }
 
-            .grid-footer a {
-                background-color: #ffffff;
-                color: blue;
-                box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-                padding: 1px 10px 2px 10px;
-            }
-
-                .grid-footer a:active, a:hover {
-                    background-color: #ffffff;
-                    color: #FFAD33;
-                    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-                }
-
-        .alternatingRowStyle {
-            background-color: aliceblue;
+        .table-room tbody tr:hover {
+            background: #f8f9fa;
         }
-    </style>
-</head>
-<body>
-    <h3>KIỂM TRA PHÒNG TRỐNG</h3>
-    <hr />
 
-    <div>
-        @using (Html.BeginForm("Index", "KiemTraPhongTrong"))
+    .status-empty {
+        color: #198754;
+        font-weight: 700;
+    }
+
+    .no-data {
+        text-align: center;
+        padding: 25px;
+        color: #dc3545;
+        font-weight: 700;
+        font-size: 18px;
+    }
+
+    .error-box {
+        background: #fff3cd;
+        color: #856404;
+        padding: 12px 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .footer-btn {
+        margin-top: 20px;
+        text-align: left;
+    }
+</style>
+
+<div class="page-wrap">
+
+    <div class="title-box">
+        <h2>KIỂM TRA PHÒNG TRỐNG</h2>
+    </div>
+
+    <div class="search-card">
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="error-box">
+                @ViewBag.Error
+            </div>
+        }
+
+        @using (Html.BeginForm("Index", "KiemTraPhongTrong", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
 
+            <div class="row-form">
+                <label>Ngày đến</label>
+                <input type="date" name="ngayDen" value="@ViewBag.ngayDen" class="form-control" />
+            </div>
 
-            <table class="table1" align="center">
-                <tr>
-                    <td>
-                        <div>Ngày đến </div>
-                    </td>
-                    <td>
-                        <input type="date" name="ngayDen" value="@ViewBag.ngayDen" class="form-control" />
-                    </td>
+            <div class="row-form">
+                <label>Ngày đi</label>
+                <input type="date" name="ngayDi" value="@ViewBag.ngayDi" class="form-control" />
+            </div>
 
-                </tr>
-                <tr>
-                    <td>Ngày đi </td>
-                    <td>
-                        <input type="date" name="ngayDi" value="@ViewBag.ngayDi" class="form-control" />
-                    </td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>
-                        <input type="submit" name="submit" value="Tìm kiếm" style="margin-left: 5px;width:100px;
-                background-color: blue;color:white" />
-                        <input type="button" name="Nhapmoi" value="Nhập mới" style="margin-left: 5px;width:100px;
-                background-color: blue;color:white" onclick="location.href='@Url.Action("Index", "KiemTraPhongTrong")'" />
+            <div class="btn-zone">
+                <input type="submit" value="Tìm kiếm" class="btn-custom btn-search" />
 
-                    </td>
-                </tr>
-                <tr>
-                    <td><br /></td>
-                </tr>
-            </table>
+                <input type="button"
+                       value="Nhập mới"
+                       class="btn-custom btn-reset"
+                       onclick="location.href='@Url.Action("Index","KiemTraPhongTrong")'" />
+            </div>
         }
     </div>
-    @if (Model.Count > 0)
-    {
-        <table class="table1" align="center">
-            <tr>
-                <td>Mã Phòng</td>
-                <td>Mã Loại Phòng</td>
 
-            </tr>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.Phong.maP</td>
-                    <td>@item.Phong.maP</td>
-                </tr>
-            }
-        </table>
-    }
-    <div>
-        @Html.ActionLink("Quay lại", "Index", "Home")
+    <div class="result-card">
+
+        @if (Model != null && Model.Count > 0)
+        {
+            <table class="table-room">
+                <thead>
+                    <tr>
+                        <th>Mã Phòng</th>
+                        <th>Mã Loại Phòng</th>
+                        <th>Tình Trạng</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.maP</td>
+                            <td>@item.maLP</td>
+                            <td class="status-empty">Còn Trống</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="no-data">
+                Không có phòng trống trong khoảng thời gian này
+            </div>
+        }
+
+        <div class="footer-btn">
+            <a href="@Url.Action("Index","Home")" class="btn-custom btn-back">
+                ← Quay lại
+            </a>
+        </div>
+
     </div>
-</body>
-</html>
 
-
+</div>

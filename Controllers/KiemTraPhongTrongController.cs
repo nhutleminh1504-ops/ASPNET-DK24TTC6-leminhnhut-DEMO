@@ -1,8 +1,6 @@
 ﻿using DoAnHMS.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace DoAnHMS.Controllers
@@ -14,17 +12,35 @@ namespace DoAnHMS.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            var chiTietPhieuThuePhong = db.CTPhieuThuePhongs.ToList();
-            return View(chiTietPhieuThuePhong);
+            return View(db.Phongs.ToList());
         }
 
         [HttpPost]
         public ActionResult Index(string ngayDen, string ngayDi)
         {
-            DateTime dt1 = Convert.ToDateTime(Convert.ToDateTime(ngayDen).ToString("dd/MM/yyyy"));
-            DateTime dt2 = Convert.ToDateTime(Convert.ToDateTime(ngayDi).ToString("dd/MM/yyyy"));
-            var chiTietPhieuThuePhong = db.CTPhieuThuePhongs.Where(n => n.PhieuThuePhong.ngayThue <= dt1 && n.PhieuThuePhong.ngayTra >= dt2).ToList();
-            return View(chiTietPhieuThuePhong);
+            ViewBag.ngayDen = ngayDen;
+            ViewBag.ngayDi = ngayDi;
+
+            if (string.IsNullOrWhiteSpace(ngayDen) || string.IsNullOrWhiteSpace(ngayDi))
+            {
+                ViewBag.Error = "Vui lòng nhập đầy đủ ngày đến và ngày đi!";
+                return View(db.Phongs.ToList());
+            }
+
+            DateTime dt1 = Convert.ToDateTime(ngayDen);
+            DateTime dt2 = Convert.ToDateTime(ngayDi);
+
+            var dsPhongDaThue = db.CTPhieuThuePhongs
+                .Where(x => x.PhieuThuePhong.ngayThue <= dt2
+                         && x.PhieuThuePhong.ngayTra >= dt1)
+                .Select(x => x.maP)
+                .ToList();
+
+            var phongTrong = db.Phongs
+                .Where(p => !dsPhongDaThue.Contains(p.maP))
+                .ToList();
+
+            return View(phongTrong);
         }
     }
 }
