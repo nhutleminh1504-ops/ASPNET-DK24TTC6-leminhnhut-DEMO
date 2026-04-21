@@ -1,0 +1,3 @@
+- Phân tích đề tài website đặt phòng khách sạn
+- Thiết kế cơ sở dữ liệu
+- Tạo project ASP.NET MVC
