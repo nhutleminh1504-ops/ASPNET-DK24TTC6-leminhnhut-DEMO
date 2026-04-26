@@ -64,6 +64,7 @@
 Admin
 Username: admin
 Password: 12356
+-
 Nhân viên
 Username: nv   
 Password: 123456
