@@ -46,15 +46,24 @@
 ---
 
 ## 🛠️ Hướng dẫn cài đặt
-
-1. **Cơ sở dữ liệu:**
+1. sao chép toàn bộ project từ GitHub về máy tính
+2. **Cơ sở dữ liệu:**
    - Mở **SQL Server Management Studio (SSMS)**.
    - Chạy file script `.sql` (đính kèm trong thư mục Database) để tạo cấu trúc bảng và dữ liệu mẫu.
 
-2. **Cấu hình kết nối:**
+3. **Cấu hình kết nối:**
    - Mở dự án trong **Visual Studio 2022**.
    - Tìm file `Web.config` hoặc `appsettings.json`.
    - Chỉnh sửa dòng `ConnectionString` để khớp với Server Name của SQL Server trên máy bạn.
 
-3. **Chạy dự án:**
+4. **Chạy dự án:**
    - Nhấn `F5` hoặc nút **Start** trên Visual Studio để khởi động website trên trình duyệt Chrome/Edge.
+  
+
+🔑 Tài khoản mẫu
+Admin
+Username: admin
+Password: 12356
+Nhân viên
+Username: nv   
+Password: 123456
