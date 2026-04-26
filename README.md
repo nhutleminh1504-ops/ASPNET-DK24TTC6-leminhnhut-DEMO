@@ -1,4 +1,4 @@
-# 🏨WEbSITE ĐẶT PHÒNG KHÁCH SẠN HOÀNG GIA
+# 🏨WEBSITE ĐẶT PHÒNG KHÁCH SẠN 
 ---
 
 ## 👨‍💻 Thông tin sinh viên
