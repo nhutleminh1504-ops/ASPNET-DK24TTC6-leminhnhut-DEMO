@@ -1,0 +1,152 @@
+﻿@* SỬA LỖI QUAN TRỌNG: Model phải là QuanTri *@
+@model IEnumerable<DoAnHMS.Models.QuanTri>
+
+@{
+    ViewBag.Title = "Quản lý quyền truy cập";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var grid = new WebGrid(Model, canPage: true, defaultSort: "username", rowsPerPage: 10);
+}
+
+<style type="text/css">
+    :root {
+        --luxury-gold: #c5a059;
+        --luxury-navy: #1a1d2e;
+    }
+
+    .dashboard-card {
+        background: #fff;
+        border: none;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        padding: 30px;
+        margin-top: 20px;
+        position: relative;
+    }
+
+        .dashboard-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--luxury-gold);
+        }
+
+    .table-luxury {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .table-luxury th {
+            background-color: #fcfcfc !important;
+            color: var(--luxury-navy) !important;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            padding: 15px !important;
+            border-bottom: 2px solid #eee !important;
+        }
+
+        .table-luxury td {
+            padding: 18px 15px !important;
+            vertical-align: middle !important;
+            font-size: 14px;
+            border-bottom: 1px solid #f8f9fa !important;
+        }
+
+    /* Badge Trạng thái */
+    .badge-status {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 5px 12px;
+        border-radius: 50px;
+        text-transform: uppercase;
+    }
+
+    .status-active {
+        background-color: #e6f4ea;
+        color: #1e7e34;
+    }
+
+    .status-locked {
+        background-color: #fdecea;
+        color: #d9534f;
+    }
+
+    .user-tag {
+        font-weight: 700;
+        color: var(--luxury-navy);
+        background: #f8f9fa;
+        padding: 4px 10px;
+        border-left: 3px solid var(--luxury-gold);
+    }
+
+    .grid-footer {
+        text-align: center;
+        padding-top: 30px;
+    }
+
+        .grid-footer a {
+            color: var(--luxury-navy);
+            padding: 8px 14px;
+            border: 1px solid #eee;
+            margin: 0 3px;
+            font-size: 12px;
+            text-decoration: none;
+        }
+
+            .grid-footer a:hover {
+                background: var(--luxury-gold);
+                color: #fff;
+            }
+</style>
+
+<div class="container-fluid">
+    <div class="dashboard-card">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 style="font-family: 'Playfair Display', serif; color: var(--luxury-navy); font-weight: 700;">DANH SÁCH TÀI KHOẢN HỆ THỐNG</h3>
+                <p class="text-muted small m-0">Quản lý định danh và quyền truy cập nhân sự</p>
+            </div>
+            <a href="@Url.Action("Create")" class="btn shadow-sm" style="background: var(--luxury-navy); color: white; border-radius: 0; font-size: 11px; letter-spacing: 1px; padding: 10px 20px;">
+                <i class="fas fa-plus-circle mr-2"></i> CẤP TÀI KHOẢN MỚI
+            </a>
+        </div>
+
+        <div id="gridContent" class="table-responsive">
+            @grid.GetHtml(
+                tableStyle: "table table-luxury",
+                footerStyle: "grid-footer",
+                mode: WebGridPagerModes.All,
+                columns: grid.Columns(
+                    grid.Column("STT", format: item => item.WebGrid.Rows.IndexOf(item) + 1 + (grid.PageIndex * grid.RowsPerPage), style: "text-center"),
+
+                    grid.Column("username", "Tên đăng nhập", format: @<text><span class="user-tag">@item.username</span></text>),
+
+grid.Column("NhanVien.tenNV", "Nhân viên sở hữu", format: @<text><i class="fas fa-user-circle mr-2 text-muted"></i>@item.NhanVien.tenNV</text>),
+
+grid.Column("NhomNhanVien.TenNhom", "Nhóm quyền", format: @<text><span class="badge badge-light border">@item.NhomNhanVien.TenNhom</span></text>),
+
+grid.Column("tinhTrang", "Trạng thái", format: @<text>
+    @if (item.tinhTrang == true)
+    {
+        <span class="badge-status status-active">Đang hoạt động</span>
+    }
+    else
+    {
+        <span class="badge-status status-locked">Đang khóa</span>
+    }
+</text>, style: "text-center"),
+
+grid.Column("Thao tác", format: @<text>
+    <a href="@Url.Action("Edit", new { id = item.username })" class="text-primary mr-3" title="Chỉnh sửa"><i class="fas fa-user-cog"></i></a>
+    <a href="@Url.Action("Delete", new { id = item.username })" class="text-danger" title="Xóa"><i class="fas fa-user-minus"></i></a>
+</text>, style: "text-center")
+)
+)
+        </div>
+    </div>
+</div>

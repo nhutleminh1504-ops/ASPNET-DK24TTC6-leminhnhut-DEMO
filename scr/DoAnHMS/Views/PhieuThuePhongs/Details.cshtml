@@ -1,0 +1,146 @@
+﻿@model DoAnHMS.Models.PhieuThuePhong
+
+@{
+    ViewBag.Title = "Phiếu thuê phòng - Chi tiết";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    // Chi tiết dịch vụ/phòng thường không quá dài nên tắt phân trang để dễ theo dõi tổng thể
+    var grid = new WebGrid(Model.CTPhieuThuePhongs, canPage: false);
+}
+
+<style>
+    .detail-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        padding: 30px;
+        margin-top: 20px;
+        border-top: 5px solid #1cc88a; /* Màu xanh lá đặc trưng cho phiếu thuê */
+    }
+
+    .info-group {
+        margin-bottom: 15px;
+        padding: 10px;
+        border-bottom: 1px solid #f8f9fc;
+    }
+
+    .info-label {
+        font-weight: 700;
+        color: #1cc88a;
+        width: 180px;
+        display: inline-block;
+    }
+
+    .badge-pdp {
+        background-color: #e3e6f0;
+        color: #4e73df;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+    .table-detail th {
+        background-color: #f8f9fc;
+        color: #1cc88a;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+    }
+
+    .action-links {
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="detail-card">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="m-0 font-weight-bold text-success"><i class="fas fa-file-signature"></i> CHI TIẾT PHIẾU THUÊ</h3>
+            <div>
+                <a href="@Url.Action("Edit", new { id = Model.maPTP })" class="btn btn-warning btn-sm shadow-sm">
+                    <i class="fas fa-edit"></i> Chỉnh sửa
+                </a>
+                <a href="@Url.Action("Index")" class="btn btn-secondary btn-sm shadow-sm">
+                    <i class="fas fa-arrow-left"></i> Quay lại
+                </a>
+            </div>
+        </div>
+        <hr />
+
+        <div class="row">
+            <div class="col-md-6 border-right">
+                <div class="info-group">
+                    <span class="info-label">Mã phiếu thuê:</span>
+                    <span class="font-weight-bold text-dark">@Model.maPTP</span>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">Từ phiếu đặt:</span>
+                    @if (Model.maPDP != null)
+                    {
+                        <span class="badge-pdp">#@Model.maPDP</span>
+                    }
+                    else
+                    {
+                        <span class="text-muted"><i>Thuê trực tiếp</i></span>
+                    }
+                </div>
+                <div class="info-group">
+                    <span class="info-label">Khách hàng:</span>
+                    <span class="text-dark">@Model.KhachHang.tenKH</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-group">
+                    <span class="info-label">Ngày thuê:</span>
+                    <span>@Model.ngayThue.ToString("dd/MM/yyyy HH:mm")</span>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">Ngày trả (Dự kiến):</span>
+                    <span class="text-danger font-weight-bold">@Model.ngayTra.ToString("dd/MM/yyyy HH:mm")</span>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">Nhân viên:</span>
+                    <span>@Model.NhanVien.tenNV</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="m-0 font-weight-bold text-dark"><i class="fas fa-concierge-bell"></i> DỊCH VỤ & PHÒNG SỬ DỤNG</h5>
+                <a href="@Url.Action("CreateCTPhieuThue", new { maPTP = Model.maPTP })" class="btn btn-outline-success btn-sm">
+                    <i class="fas fa-plus"></i> Thêm dịch vụ/phòng
+                </a>
+            </div>
+
+            <div class="table-responsive">
+                @grid.GetHtml(
+                    tableStyle: "table table-bordered table-detail",
+                    alternatingRowStyle: "bg-light",
+                    columns: grid.Columns(
+                        grid.Column("STT", format: item => item.WebGrid.Rows.IndexOf(item) + 1),
+                        grid.Column("maP", "Mã phòng", format: @<text>@if (item.maP != null)
+                                {<b class="text-primary">@item.maP</b> }
+                            else
+                            { <span class="text-muted">-</span>}</text>),
+grid.Column("DichVu.tenDV", "Tên dịch vụ", format: @<text>@(item.maDV != null ? item.DichVu.tenDV : "Tiền thuê phòng")</text>),
+grid.Column("soLuong", "SL", style: "text-center"),
+grid.Column("ngaySD", "Thời gian sử dụng", format: @<text>@item.ngaySD.ToString("dd/MM/yyyy HH:mm")</text>),
+grid.Column(header: "Thao tác", style: "text-center", format: @<text>
+    <a href="@Url.Action("DeleteCTPhieuThue", new { maPTP = item.maPTP, maP = item.maP, maDV = item.maDV, ngaySD = item.ngaySD })"
+       class="text-danger" onclick="return confirm('Gỡ bỏ dịch vụ/phòng này khỏi phiếu thuê?')">
+        <i class="fas fa-trash-alt"></i>
+    </a>
+</text>)
+)
+)
+            </div>
+        </div>
+
+        <div class="action-links text-right">
+            <a href="@Url.Action("Index", "HoaDons", new { maPTP = Model.maPTP })" class="btn btn-primary">
+                <i class="fas fa-receipt"></i> Xuất hóa đơn thanh toán
+            </a>
+        </div>
+    </div>
+</div>

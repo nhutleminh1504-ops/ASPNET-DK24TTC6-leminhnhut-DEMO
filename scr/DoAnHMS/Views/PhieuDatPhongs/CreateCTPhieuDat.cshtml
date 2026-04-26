@@ -1,0 +1,105 @@
+﻿@model DoAnHMS.Models.CTPhieuDatPhong
+
+@{
+    ViewBag.Title = "Đặt thêm phòng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .create-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        padding: 30px;
+        margin-top: 20px;
+        border-top: 5px solid #28a745; /* Màu xanh lá cho việc thêm mới */
+    }
+
+    .control-label {
+        font-weight: 600;
+        color: #555;
+    }
+
+    .input-group-text {
+        background-color: #f8f9fc;
+        color: #4e73df;
+    }
+
+    .note-box {
+        background-color: #eafaf1;
+        border-left: 4px solid #28a745;
+        padding: 10px 15px;
+        margin-bottom: 20px;
+        color: #196f3d;
+        font-size: 0.9rem;
+    }
+</style>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="create-card">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="text-success m-0"><i class="fas fa-plus-circle"></i> ĐẶT THÊM PHÒNG</h3>
+                    <a href="@Url.Action("Details", new { id = ViewBag.maPDP })" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Quay lại
+                    </a>
+                </div>
+
+                <div class="note-box">
+                    <i class="fas fa-info-circle"></i> Vui lòng chọn phòng trống và nhập số tiền cọc tương ứng cho phòng đặt thêm.
+                </div>
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="form-group mb-4">
+                            @Html.LabelFor(model => model.maPDP, "Mã phiếu đặt phòng", htmlAttributes: new { @class = "control-label mb-2" })
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
+                                </div>
+                                @Html.EditorFor(model => model.maPDP, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.maPDP, @readonly = "readonly" } })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.maPDP, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group mb-4">
+                            @Html.LabelFor(model => model.maP, "Chọn phòng trống", htmlAttributes: new { @class = "control-label mb-2" })
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-bed"></i></span>
+                                </div>
+                                @Html.DropDownList("maP", null, "-- Chọn phòng --", htmlAttributes: new { @class = "form-control" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.maP, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group mb-4">
+                            @Html.LabelFor(model => model.tienCoc, "Tiền cọc phòng (VNĐ)", htmlAttributes: new { @class = "control-label mb-2" })
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span>
+                                </div>
+                                @Html.EditorFor(model => model.tienCoc, new { htmlAttributes = new { @class = "form-control", @Value = 300000, @type = "number", @step = "1000" } })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.tienCoc, "", new { @class = "text-danger" })
+                        </div>
+
+                        <hr />
+
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-success btn-lg btn-block shadow-sm">
+                                <i class="fas fa-check"></i> XÁC NHẬN THÊM PHÒNG
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

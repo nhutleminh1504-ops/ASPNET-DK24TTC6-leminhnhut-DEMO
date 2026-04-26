@@ -1,0 +1,159 @@
+﻿@model DoAnHMS.Models.LoaiPhong
+
+@{
+    ViewBag.Title = "Loại phòng - Thêm mới";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .create-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        padding: 30px;
+        margin-top: 20px;
+        border-top: 5px solid #28a745; 
+    }
+
+    .img-preview-box {
+        margin-top: 10px;
+        border: 2px dashed #ccc;
+        padding: 10px;
+        border-radius: 8px;
+        min-height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f9f9f9;
+    }
+
+    #previewImg {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 5px;
+        display: none; 
+    }
+
+    .custom-file-upload {
+        border: 1px solid #ccc;
+        display: inline-block;
+        padding: 6px 12px;
+        cursor: pointer;
+        border-radius: 4px;
+        background: #f1f1f1;
+        width: 100%;
+        text-align: center;
+    }
+
+        .custom-file-upload:hover {
+            background: #e2e2e2;
+        }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="create-card">
+                <h3 class="text-success" style="margin-top:0"><i class="fa fa-plus-circle"></i> THÊM MỚI LOẠI PHÒNG</h3>
+                <hr />
+
+                @using (Html.BeginForm("Create", "LoaiPhongs", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">Mã loại phòng</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.maLP, new { htmlAttributes = new { @class = "form-control", placeholder = "VD: LP01" } })
+                                        @Html.ValidationMessageFor(model => model.maLP, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">Tên loại phòng</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.tenLP, new { htmlAttributes = new { @class = "form-control", placeholder = "VD: Phòng Đôi VIP" } })
+                                        @Html.ValidationMessageFor(model => model.tenLP, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">Sức chứa (người)</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.sucChua, new { htmlAttributes = new { @class = "form-control", min = "1" } })
+                                        @Html.ValidationMessageFor(model => model.sucChua, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">Đơn giá (VNĐ)</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.donGia, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                                        @Html.ValidationMessageFor(model => model.donGia, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-5 text-center">
+                                <label class="control-label">Hình ảnh đại diện</label>
+                                <div class="img-preview-box">
+                                    <img id="previewImg" src="#" alt="Xem trước ảnh" />
+                                    <p id="placeholderText" class="text-muted">Chưa chọn ảnh</p>
+                                </div>
+                                <div style="margin-top: 10px;">
+                                    <label for="Avatar" class="custom-file-upload">
+                                        <i class="fa fa-cloud-upload"></i> Chọn file ảnh
+                                    </label>
+                                    <input type="file" name="Avatar" id="Avatar" accept="image/*" style="display:none;" required />
+                                    @Html.ValidationMessageFor(model => model.hinhAnh, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top:15px">
+                            <label class="control-label col-md-2">Mô tả</label>
+                            <div class="col-md-10">
+                                @Html.TextAreaFor(model => model.moTa, new { @class = "form-control", rows = "3", placeholder = "Nhập mô tả về tiện nghi phòng..." })
+                                @Html.ValidationMessageFor(model => model.moTa, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <hr />
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="submit" class="btn btn-success" style="padding:10px 40px; font-weight:bold;">
+                                    <i class="fa fa-plus"></i> THÊM MỚI
+                                </button>
+                                <a href="@Url.Action("Index")" class="btn btn-default" style="padding:10px 20px; margin-left:10px;">
+                                    Hủy bỏ
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            $("#Avatar").change(function () {
+                if (this.files && this.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#previewImg').attr('src', e.target.result).fadeIn();
+                        $('#placeholderText').hide();
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,125 @@
+﻿@model IEnumerable<DoAnHMS.Models.HoaDon>
+
+@{
+    ViewBag.Title = "Danh sách hóa đơn";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    // Khởi tạo WebGrid với cấu hình phân trang
+    var grid = new WebGrid(Model, canPage: true, defaultSort: "maHD", rowsPerPage: 10);
+}
+
+<style type="text/css">
+    /* Tổng thể bảng */
+    .dashboard-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        padding: 25px;
+        margin-top: 20px;
+    }
+
+    #WebGrid {
+        border-collapse: separate;
+        width: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+        #WebGrid th {
+            background-color: #4e73df;
+            color: white;
+            padding: 12px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            border: none;
+        }
+
+    .alternatingRowStyle {
+        background-color: #f8f9fc;
+    }
+
+    /* Phân trang */
+    .grid-footer {
+        text-align: center;
+        padding: 20px 0;
+    }
+
+        .grid-footer a {
+            background-color: #ffffff;
+            color: #4e73df;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            margin: 0 3px;
+            font-weight: bold;
+        }
+
+            .grid-footer a:hover {
+                background-color: #4e73df;
+                color: white;
+            }
+
+    /* Tiền tệ */
+    .price-text {
+        color: #e74a3b;
+        font-weight: bold;
+    }
+
+    /* Badge cho mã */
+    .badge-code {
+        background: #eaecf4;
+        color: #5a5c69;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-family: 'Courier New', Courier, monospace;
+        font-weight: bold;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="dashboard-card">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="text-primary font-weight-bold m-0">
+                <i class="fas fa-file-invoice-dollar"></i> QUẢN LÝ HÓA ĐƠN
+            </h3>
+            @Html.ActionLink("Thêm mới hóa đơn", "Create", null, new { @class = "btn btn-primary shadow-sm" })
+        </div>
+
+        <div id="gridContent" class="table-responsive">
+            @grid.GetHtml(
+                htmlAttributes: new { @id = "WebGrid" },
+                tableStyle: "table table-hover",
+                footerStyle: "grid-footer",
+                fillEmptyRows: false,
+                mode: WebGridPagerModes.All,
+                alternatingRowStyle: "alternatingRowStyle",
+                columns: grid.Columns(
+                    grid.Column("STT", format: item => item.WebGrid.Rows.IndexOf(item) + 1 + (grid.PageIndex * grid.RowsPerPage), style: "text-center"),
+
+                    grid.Column("maHD", "Mã hóa đơn", format: @<text><span class="badge-code">@item.maHD</span></text>),
+
+grid.Column("maPTP", "Phiếu thuê", format: @<text><span class="text-info">#@item.maPTP</span></text>),
+
+grid.Column("ngayTT", "Ngày thanh toán", format: @<text>@item.ngayTT.ToString("dd/MM/yyyy HH:mm")</text>),
+
+grid.Column("tongTien", "Tổng tiền", format: @<text><span class="price-text">@item.tongTien.ToString("#,##0") VNĐ</span></text>),
+
+grid.Column("PhieuThuePhong.KhachHang.tenKH", "Khách hàng"),
+
+grid.Column("NhanVien.tenNV", "Nhân viên"),
+
+grid.Column("Thao tác", format: @<text>
+    <div class="btn-group">
+        <a href="@Url.Action("Details", new { id = item.maHD })" class="btn btn-sm btn-outline-info" title="Xem chi tiết">
+            <i class="fas fa-eye"></i>
+        </a>
+        <a href="@Url.Action("Delete", new { id = item.maHD })" class="btn btn-sm btn-outline-danger" title="Xóa">
+            <i class="fas fa-trash-alt"></i>
+        </a>
+    </div>
+</text>, style: "text-center")
+)
+)
+        </div>
+    </div>
+</div>

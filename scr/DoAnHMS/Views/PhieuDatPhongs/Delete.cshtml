@@ -1,0 +1,165 @@
+﻿@model DoAnHMS.Models.PhieuDatPhong
+
+@{
+    ViewBag.Title = "Xóa phiếu đặt phòng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var grid = new WebGrid(Model.CTPhieuDatPhongs, canPage: false); // Thường trang xóa không cần phân trang chi tiết
+}
+
+<style>
+    .delete-wrapper {
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        margin-top: 20px;
+        overflow: hidden;
+        border-top: 5px solid #e74a3b;
+    }
+
+    .delete-header {
+        padding: 25px;
+        background: #fff;
+    }
+
+    .alert-danger-custom {
+        background-color: #fff5f5;
+        border-left: 5px solid #e74a3b;
+        color: #b91c1c;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
+
+    .info-box {
+        padding: 0 25px 25px;
+    }
+
+    .info-label {
+        font-weight: 700;
+        color: #858796;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        display: block;
+        margin-bottom: 2px;
+    }
+
+    .info-value {
+        font-size: 1rem;
+        color: #333;
+        margin-bottom: 15px;
+        display: block;
+        font-weight: 500;
+    }
+
+    .table-preview {
+        margin-top: 20px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e3e6f0;
+    }
+
+        .table-preview th {
+            background-color: #f8f9fc;
+            color: #4e73df;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+    .action-bar {
+        background: #f8f9fc;
+        padding: 20px 25px;
+        border-top: 1px solid #e3e6f0;
+    }
+
+    .btn-delete-final {
+        background: linear-gradient(135deg, #e74a3b 0%, #be2617 100%);
+        border: none;
+        color: white;
+        padding: 10px 35px;
+        font-weight: 700;
+        border-radius: 5px;
+        transition: 0.3s;
+    }
+
+        .btn-delete-final:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(231, 74, 59, 0.3);
+            color: white;
+        }
+</style>
+
+<div class="container-fluid">
+    <div class="delete-wrapper">
+        <div class="delete-header">
+            <h3 class="text-danger font-weight-bold"><i class="fas fa-trash-alt mr-2"></i> XÁC NHẬN XÓA PHIẾU ĐẶT</h3>
+
+            <div class="alert-danger-custom mt-3">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                <strong>CẢNH BÁO QUAN TRỌNG:</strong> <br />
+                Việc xóa phiếu đặt này sẽ dẫn đến việc <strong>tự động xóa</strong> các phiếu thuê phòng liên quan và toàn bộ chi tiết đi kèm. Hành động này không thể hoàn tác!
+            </div>
+        </div>
+
+        <div class="info-box">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="info-label">Mã phiếu đặt phòng</span>
+                    <span class="info-value text-primary">#@Model.maPDP</span>
+
+                    <span class="info-label">Ngày đến</span>
+                    <span class="info-value">@Model.ngayDen.ToString("dd/MM/yyyy")</span>
+                </div>
+                <div class="col-md-4">
+                    <span class="info-label">Tên khách hàng</span>
+                    <span class="info-value">@Model.KhachHang.tenKH</span>
+
+                    <span class="info-label">Ngày đi</span>
+                    <span class="info-value">@Model.ngayDi.ToString("dd/MM/yyyy")</span>
+                </div>
+                <div class="col-md-4">
+                    <span class="info-label">Tình trạng</span>
+                    <span class="info-value">
+                        <span class="badge @(Model.tinhTrang == true ? "badge-success" : "badge-warning")" style="padding: 5px 10px;">
+                            @(Model.tinhTrang == true ? "Đã nhận phòng" : "Chưa nhận phòng")
+                        </span>
+                    </span>
+
+                    <span class="info-label">Nhân viên lập</span>
+                    <span class="info-value">@Model.NhanVien.tenNV</span>
+                </div>
+            </div>
+
+            <h5 class="mt-4 font-weight-bold text-gray-800"><i class="fas fa-bed mr-2"></i> Chi tiết phòng sẽ bị xóa</h5>
+            <div class="table-preview">
+                @grid.GetHtml(
+                    tableStyle: "table m-0",
+                    headerStyle: "thead-light",
+                    alternatingRowStyle: "bg-light",
+                    columns: grid.Columns(
+                        grid.Column("STT", format: item => item.WebGrid.Rows.IndexOf(item) + 1, style: "text-center"),
+                        grid.Column("maP", "Mã phòng", style: "font-weight-bold text-primary"),
+                        grid.Column("tienCoc", "Tiền cọc", format: @<text>@item.tienCoc.ToString("#,##0") VNĐ</text>),
+grid.Column("Phong.LoaiPhong.tenLP", "Loại Phòng"),
+grid.Column("Phong.LoaiPhong.sucChua", "Sức chứa", style: "text-center")
+)
+)
+            </div>
+        </div>
+
+        <div class="action-bar">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.maPDP)
+
+                <button type="submit" class="btn-delete-final">
+                    <i class="fas fa-check-circle mr-1"></i> XÁC NHẬN XÓA
+                </button>
+                <a href="@Url.Action("Index")" class="btn btn-outline-secondary ml-2 font-weight-bold" style="padding: 10px 25px;">
+                    <i class="fas fa-times-circle mr-1"></i> HỦY BỎ
+                </a>
+            }
+        </div>
+    </div>
+</div>

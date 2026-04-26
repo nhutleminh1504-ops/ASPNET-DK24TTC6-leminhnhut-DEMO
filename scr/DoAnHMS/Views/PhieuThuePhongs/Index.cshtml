@@ -1,0 +1,171 @@
+﻿@model IEnumerable<DoAnHMS.Models.PhieuThuePhong>
+@{
+    ViewBag.Title = "Danh sách Phiếu Thuê";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+   
+    WebGrid webGrid = new WebGrid(Model, canPage: true, defaultSort: "maPTP", rowsPerPage: 5);
+}
+
+<style>
+ 
+    .dashboard-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        padding: 25px;
+        margin-top: 20px;
+    }
+
+    #WebGrid {
+        border-collapse: separate;
+        width: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+        #WebGrid th {
+            background-color: #4e73df;
+            color: white;
+            padding: 12px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+    .alternatingRowStyle {
+        background-color: #f8f9fc;
+    }
+
+    /* Phân trang */
+    .grid-footer {
+        text-align: center;
+        padding: 15px;
+    }
+
+        .grid-footer a {
+            background: #fff;
+            color: #4e73df;
+            padding: 5px 12px;
+            margin: 0 2px;
+            border-radius: 4px;
+            text-decoration: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-weight: bold;
+        }
+
+            .grid-footer a:hover {
+                background: #4e73df;
+                color: white;
+            }
+
+   
+    .ChildGrid {
+        width: 95%;
+        margin: 10px auto !important;
+        border: 1px solid #e3e6f0;
+    }
+
+        .ChildGrid th {
+            background-color: #1cc88a !important;
+            font-size: 0.8rem !important;
+        }
+
+    .expander {
+        cursor: pointer;
+        width: 20px;
+        transition: 0.2s;
+    }
+
+    .hide-column {
+        display: none;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="dashboard-card">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="text-primary font-weight-bold m-0"><i class="fas fa-file-signature"></i> QUẢN LÝ PHIẾU THUÊ</h3>
+            @Html.ActionLink("Thêm mới phiếu thuê", "Create", null, new { @class = "btn btn-primary" })
+        </div>
+
+        <div id="gridContent" class="table-responsive">
+            @webGrid.GetHtml(
+                htmlAttributes: new { @id = "WebGrid" },
+                tableStyle: "table table-hover",
+                footerStyle: "grid-footer",
+                mode: WebGridPagerModes.All,
+                alternatingRowStyle: "alternatingRowStyle",
+                columns: webGrid.Columns(
+                 
+                    webGrid.Column(null, null, format: @<text>
+                            <img src="/Images/plus.png" class="expander" />
+                            <div class="nested-content" style="display:none"></div>
+                    </text>, style: "text-center"),
+
+             webGrid.Column("STT", format: ptp => ptp.WebGrid.Rows.IndexOf(ptp) + 1 + (webGrid.PageIndex * webGrid.RowsPerPage)),
+             webGrid.Column("maPTP", "Mã Phiếu"),
+             webGrid.Column("maPDP", "Từ phiếu đặt", format: ptp => ptp.maPDP == null ? Html.Raw("<span class='badge badge-secondary'>Trực tiếp</span>") : ptp.maPDP),
+             webGrid.Column("ngayThue", "Ngày thuê", format: ptp => ptp.ngayThue.ToString("dd/MM/yyyy HH:mm")),
+             webGrid.Column("ngayTra", "Trả dự kiến", format: ptp => ptp.ngayTra.ToString("dd/MM/yyyy HH:mm")),
+             webGrid.Column("KhachHang.tenKH", "Khách hàng"),
+             webGrid.Column("NhanVien.TenNV", "Nhân viên"),
+
+             webGrid.Column(header: "Chi tiết", style: "hide-column", format: (ptp) =>
+             {
+              
+                 WebGrid childGrid = new WebGrid(source: ptp.CTPhieuThuePhongs, canSort: false, canPage: false);
+                 return childGrid.GetHtml(
+                     htmlAttributes: new { @class = "ChildGrid table table-sm" },
+                     columns: childGrid.Columns(
+                         childGrid.Column("STT", format: ct => ct.WebGrid.Rows.IndexOf(ct) + 1),
+                         childGrid.Column("maP", "Phòng"),
+                         childGrid.Column("DichVu.tenDV", "Dịch vụ"),
+                         
+                         childGrid.Column("ngaySD", "Thời gian dùng", format: ct => ct.ngaySD.ToString("dd/MM/yyyy HH:mm")),
+                         childGrid.Column("soLuong", "SL", style: "text-center")
+                     ));
+             }),
+
+             // 3. Thao tác
+             webGrid.Column("Thao tác", format: @<text>
+                    <div class="btn-group">
+                        <a href="@Url.Action("Edit", new { id = item.maPTP })" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></a>
+                        <a href="@Url.Action("Details", new { id = item.maPTP })" class="btn btn-sm btn-outline-info"><i class="fas fa-info-circle"></i></a>
+                        <a href="@Url.Action("Delete", new { id = item.maPTP })" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></a>
+                    </div>
+            </text>, style: "text-center")
+ )
+)
+        </div>
+    </div>
+</div>
+
+
+<style>
+    #WebGrid th:nth-child(9) {
+        display: none;
+    }
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(function () {
+       
+        $("#WebGrid .ChildGrid").each(function () {
+            var content = $(this).get(0).outerHTML;
+            $(this).closest("tr").find(".nested-content").html(content);
+            $(this).remove();
+        });
+
+        
+        $("body").on("click", ".expander", function () {
+            var tr = $(this).closest("tr");
+            if ($(this).attr("src").indexOf("plus.png") !== -1) {
+                $(this).attr("src", "/Images/minus.png");
+                tr.after("<tr class='expanded-row'><td style='background:#f8f9fc'></td><td colspan='8' style='background:#f8f9fc'>" + tr.find(".nested-content").html() + "</td></tr>");
+            } else {
+                $(this).attr("src", "/Images/plus.png");
+                tr.next(".expanded-row").remove();
+            }
+        });
+    });
+</script>

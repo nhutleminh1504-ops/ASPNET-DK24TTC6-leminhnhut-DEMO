@@ -1,0 +1,218 @@
+﻿@model DoAnHMS.Models.LienHe
+
+@{
+    ViewBag.title = "Chi tiết yêu cầu liên hệ";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    :root {
+        --luxury-gold: #c5a059;
+        --luxury-navy: #1a1d2e;
+        --soft-gray: #f8f9fa;
+    }
+
+    .details-container {
+        padding: 40px 0;
+        background-color: var(--soft-gray);
+        min-height: 80vh;
+    }
+
+    .details-card {
+        background: #fff;
+        border: none;
+        border-radius: 0;
+        box-shadow: 0 15px 50px rgba(0,0,0,0.05);
+        position: relative;
+    }
+
+        /* Thanh vàng trang trí */
+        .details-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--luxury-gold);
+        }
+
+    .card-header-luxury {
+        padding: 50px 50px 20px;
+        background: #fff;
+    }
+
+        .card-header-luxury h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--luxury-navy);
+            letter-spacing: 2px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+    .card-body-luxury {
+        padding: 0 50px 50px;
+    }
+
+    /* Định dạng mục thông tin */
+    .info-item {
+        margin-bottom: 35px;
+        border-bottom: 1px solid #f9f9f9;
+        padding-bottom: 15px;
+    }
+
+    .info-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--luxury-gold);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .info-value {
+        font-size: 1.15rem;
+        color: var(--luxury-navy);
+        font-weight: 500;
+        display: block;
+    }
+
+    /* Badge Trạng thái */
+    .badge-luxury {
+        font-size: 10px;
+        padding: 6px 15px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        display: inline-block;
+    }
+
+    .badge-processed {
+        background-color: #e6f4ea;
+        color: #1e7e34;
+        border: 1px solid #c3e6cb;
+    }
+
+    .badge-pending {
+        background-color: #fff3e0;
+        color: #e65100;
+        border: 1px solid #ffe0b2;
+    }
+
+    /* Điều hướng */
+    .btn-luxury-back {
+        padding: 12px 35px;
+        border-radius: 0;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border: 1px solid #eee;
+        color: #999;
+        transition: all 0.3s;
+        text-decoration: none !important;
+    }
+
+        .btn-luxury-back:hover {
+            background: var(--luxury-navy);
+            color: #fff;
+            border-color: var(--luxury-navy);
+        }
+
+    .btn-luxury-edit {
+        padding: 12px 35px;
+        border-radius: 0;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        background: var(--luxury-gold);
+        color: #fff;
+        text-decoration: none !important;
+        transition: all 0.3s;
+    }
+
+        .btn-luxury-edit:hover {
+            background: var(--luxury-navy);
+            transform: translateY(-2px);
+        }
+</style>
+
+<div class="details-container">
+    <div class="row justify-content-center">
+        <div class="col-xl-9 col-lg-10">
+            <div class="details-card">
+
+                <div class="card-header-luxury d-flex justify-content-between align-items-end">
+                    <div>
+                        <p class="text-muted small mb-1">Mã yêu cầu: #@Model.id</p>
+                        <h3>Hồ sơ liên hệ khách hàng</h3>
+                    </div>
+                    <div>
+                        @if (Model.tinhTrang == true)
+                        {
+                            <span class="badge-luxury badge-processed">Hệ thống đã xử lý</span>
+                        }
+                        else
+                        {
+                            <span class="badge-luxury badge-pending">Đang chờ phản hồi</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="card-body-luxury">
+                    <hr class="mb-5" />
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <span class="info-label">Danh tính người gửi</span>
+                                <span class="info-value">@Model.hoTen</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Số điện thoại liên lạc</span>
+                                <span class="info-value text-primary">@Model.sdt</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <span class="info-label">Địa chỉ Thư điện tử</span>
+                                <span class="info-value">@Model.email</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Thời điểm ghi nhận</span>
+                                <span class="info-value">@Model.ngayGui.ToString("dd/MM/yyyy") | @Model.ngayGui.ToString("HH:mm")</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    @* Nếu bạn có trường nội dung tin nhắn, hãy thêm ở đây *@
+                    @if (ViewData["NoiDung"] != null)
+                    {
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="info-item" style="background: #fcfcfc; padding: 20px; border: 1px solid #f1f1f1;">
+                                    <span class="info-label">Nội dung tin nhắn từ khách hàng</span>
+                                    <span class="info-value" style="font-style: italic; color: #555;">"@ViewData["NoiDung"]"</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="d-flex justify-content-between align-items-center mt-5">
+                        <a href="@Url.Action("Index")" class="btn-luxury-back">
+                            <i class="fas fa-arrow-left mr-2"></i> Trở về danh sách
+                        </a>
+                        <a href="@Url.Action("Edit", new { id = Model.id })" class="btn-luxury-edit shadow-sm">
+                            Cập nhật trạng thái <i class="fas fa-edit ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

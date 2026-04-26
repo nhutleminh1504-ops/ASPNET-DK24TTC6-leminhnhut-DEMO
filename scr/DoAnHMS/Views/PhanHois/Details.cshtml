@@ -1,0 +1,241 @@
+﻿@model DoAnHMS.Models.PhanHoi
+
+@{
+    ViewBag.Title = "Chi tiết ý kiến khách hàng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    :root {
+        --luxury-gold: #c5a059;
+        --luxury-navy: #1a1d2e;
+        --soft-bg: #f4f7f6;
+    }
+
+    .details-wrapper {
+        padding: 50px 0;
+        background-color: var(--soft-bg);
+        min-height: 90vh;
+    }
+
+    .feedback-card {
+        background: #fff;
+        border: none;
+        border-radius: 0;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.05);
+        position: relative;
+        overflow: hidden;
+    }
+
+        /* Thanh vàng thượng lưu phía trên */
+        .feedback-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #c5a059, #e9d1a1);
+        }
+
+    .card-header-luxury {
+        padding: 50px 50px 0;
+        background: #fff;
+        border: none;
+    }
+
+    .guest-info-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 30px;
+    }
+
+    .guest-name h2 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: var(--luxury-navy);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 5px;
+    }
+
+    .status-pill {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 6px 18px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .status-true {
+        background: #e6f4ea;
+        color: #1e7e34;
+        border: 1px solid #c3e6cb;
+    }
+
+    .status-false {
+        background: #fff3e0;
+        color: #e65100;
+        border: 1px solid #ffe0b2;
+    }
+
+    .card-body-luxury {
+        padding: 40px 50px 50px;
+    }
+
+    /* Layout thông tin liên lạc */
+    .contact-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+
+    .label-luxury {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--luxury-gold);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .value-luxury {
+        font-size: 1.1rem;
+        color: var(--luxury-navy);
+        font-weight: 500;
+    }
+
+    /* Khung nội dung phản hồi chính */
+    .main-content-area {
+        background: #fcfcfc;
+        border: 1px solid #f1f1f1;
+        padding: 40px;
+        position: relative;
+        margin-top: 20px;
+    }
+
+        .main-content-area::after {
+            content: '\f10e'; /* FontAwesome quote right */
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            font-size: 3rem;
+            color: #f3f3f3;
+        }
+
+    .feedback-text {
+        font-size: 1.2rem;
+        line-height: 1.8;
+        color: #444;
+        font-style: italic;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Footer điều hướng */
+    .card-footer-luxury {
+        padding: 30px 50px;
+        background: #fafafa;
+        border-top: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .btn-luxury-back {
+        color: #999;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-decoration: none !important;
+        transition: 0.3s;
+    }
+
+        .btn-luxury-back:hover {
+            color: var(--luxury-navy);
+        }
+
+    .btn-luxury-action {
+        background: var(--luxury-navy);
+        color: #fff;
+        padding: 12px 30px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border-radius: 0;
+        transition: 0.4s;
+    }
+
+        .btn-luxury-action:hover {
+            background: var(--luxury-gold);
+            color: #fff;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+</style>
+
+<div class="details-wrapper">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-12">
+                <div class="feedback-card">
+
+                    <div class="card-header-luxury">
+                        <div class="guest-info-header">
+                            <div class="guest-name">
+                                <p class="text-muted small mb-1">Hồ sơ phản hồi khách hàng #@Model.id</p>
+                                <h2>@Model.hoTen</h2>
+                            </div>
+                            <div class="status-box">
+                                <span class="status-pill @(Model.tinhTrang == true ? "status-true" : "status-false")">
+                                    @(Model.tinhTrang == true ? "Đã ghi nhận & xử lý" : "Đang chờ xử lý")
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body-luxury">
+                        <div class="contact-grid">
+                            <div class="contact-item">
+                                <span class="label-luxury">Số điện thoại</span>
+                                <span class="value-luxury">@Model.sdt</span>
+                            </div>
+                            <div class="contact-item">
+                                <span class="label-luxury">Địa chỉ Email</span>
+                                <span class="value-luxury">@Model.email</span>
+                            </div>
+                            <div class="contact-item">
+                                <span class="label-luxury">Ngày gửi ý kiến</span>
+                                <span class="value-luxury">@Model.ngayGui.ToString("dd/MM/yyyy HH:mm")</span>
+                            </div>
+                        </div>
+
+                        <span class="label-luxury mt-4">Thông điệp từ khách hàng</span>
+                        <div class="main-content-area shadow-sm">
+                            <div class="feedback-text">
+                                "@Model.noiDung"
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer-luxury">
+                        <a href="@Url.Action("Index")" class="btn-luxury-back">
+                            <i class="fas fa-chevron-left mr-2"></i> Trở về danh sách
+                        </a>
+                        <a href="@Url.Action("Edit", new { id = Model.id })" class="btn-luxury-action shadow-sm">
+                            Cập nhật trạng thái <i class="fas fa-external-link-alt ml-2"></i>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,171 @@
+﻿@model DoAnHMS.Models.PhieuThuePhong
+
+@{
+    ViewBag.Title = "Xóa phiếu thuê phòng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    // Tắt phân trang cho bảng chi tiết khi xóa để xem được toàn bộ dịch vụ sẽ bị mất
+    var grid = new WebGrid(Model.CTPhieuThuePhongs, canPage: false);
+}
+
+<style>
+    .delete-container {
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        margin-top: 20px;
+        overflow: hidden;
+        border-top: 6px solid #e74a3b; /* Màu đỏ Danger */
+    }
+
+    .delete-header {
+        padding: 25px;
+        background: #fff;
+    }
+
+    .warning-box {
+        background-color: #fff5f5;
+        border-left: 5px solid #e74a3b;
+        color: #b91c1c;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
+
+    .info-section {
+        padding: 0 25px 25px;
+    }
+
+    .info-label {
+        font-weight: 700;
+        color: #858796;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        display: block;
+        margin-bottom: 2px;
+    }
+
+    .info-value {
+        font-size: 1rem;
+        color: #333;
+        margin-bottom: 15px;
+        display: block;
+        font-weight: 500;
+    }
+
+    .table-preview {
+        margin-top: 20px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e3e6f0;
+    }
+
+        .table-preview th {
+            background-color: #f8f9fc;
+            color: #e74a3b; /* Header màu đỏ để cảnh báo dữ liệu sắp xóa */
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+    .action-bar {
+        background: #f8f9fc;
+        padding: 20px 25px;
+        border-top: 1px solid #e3e6f0;
+        text-align: right;
+    }
+
+    .btn-delete-confirm {
+        background: linear-gradient(135deg, #e74a3b 0%, #be2617 100%);
+        border: none;
+        color: white;
+        padding: 10px 35px;
+        font-weight: 700;
+        border-radius: 5px;
+        transition: 0.3s;
+    }
+
+        .btn-delete-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(231, 74, 59, 0.3);
+            color: white;
+        }
+</style>
+
+<div class="container-fluid">
+    <div class="delete-container">
+        <div class="delete-header">
+            <h3 class="text-danger font-weight-bold"><i class="fas fa-exclamation-triangle"></i> XÁC NHẬN XÓA PHIẾU THUÊ</h3>
+
+            <div class="warning-box">
+                <i class="fas fa-info-circle mr-2"></i>
+                <strong>CẢNH BÁO:</strong> Mọi thông tin về việc sử dụng phòng, dịch vụ và các chi tiết liên quan của phiếu thuê này sẽ bị <strong>xóa vĩnh viễn</strong>.
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="info-label">Mã phiếu thuê</span>
+                    <span class="info-value text-danger">#@Model.maPTP</span>
+
+                    <span class="info-label">Nguồn gốc</span>
+                    <span class="info-value">
+                        @if (Model.maPDP == null)
+                        {
+                            <span class="badge badge-secondary">Thuê trực tiếp</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-info">Từ phiếu đặt #@Model.maPDP</span>
+                        }
+                    </span>
+                </div>
+                <div class="col-md-4">
+                    <span class="info-label">Khách hàng</span>
+                    <span class="info-value">@Model.KhachHang.tenKH</span>
+
+                    <span class="info-label">Ngày thuê</span>
+                    <span class="info-value">@Model.ngayThue.ToString("dd/MM/yyyy HH:mm")</span>
+                </div>
+                <div class="col-md-4">
+                    <span class="info-label">Nhân viên thực hiện</span>
+                    <span class="info-value">@Model.NhanVien.tenNV</span>
+
+                    <span class="info-label">Ngày trả dự kiến</span>
+                    <span class="info-value">@Model.ngayTra.ToString("dd/MM/yyyy HH:mm")</span>
+                </div>
+            </div>
+
+            <h5 class="mt-4 font-weight-bold text-gray-800"><i class="fas fa-list-ul mr-2"></i> Chi tiết dịch vụ & phòng sẽ bị xóa</h5>
+            <div class="table-preview">
+                @grid.GetHtml(
+                    tableStyle: "table m-0",
+                    headerStyle: "thead-light",
+                    alternatingRowStyle: "bg-light",
+                    columns: grid.Columns(
+                        grid.Column("STT", format: item => item.WebGrid.Rows.IndexOf(item) + 1, style: "text-center"),
+                        grid.Column("maP", "Mã phòng", style: "font-weight-bold"),
+                        grid.Column("DichVu.tenDV", "Dịch vụ", format: @<text>@(item.maDV != null ? item.DichVu.tenDV : "Thuê phòng")</text>),
+grid.Column("soLuong", "Số lượng", style: "text-center"),
+grid.Column("ngaySD", "Thời gian sử dụng", format: @<text>@item.ngaySD.ToString("dd/MM/yyyy HH:mm")</text>)
+)
+)
+            </div>
+        </div>
+
+        <div class="action-bar">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.maPTP)
+
+                <button type="submit" class="btn btn-delete-confirm shadow-sm">
+                    <i class="fas fa-check-circle mr-1"></i> XÁC NHẬN XÓA
+                </button>
+                <a href="@Url.Action("Index")" class="btn btn-outline-secondary ml-2 font-weight-bold" style="padding: 10px 25px;">
+                    HỦY BỎ
+                </a>
+            }
+        </div>
+    </div>
+</div>

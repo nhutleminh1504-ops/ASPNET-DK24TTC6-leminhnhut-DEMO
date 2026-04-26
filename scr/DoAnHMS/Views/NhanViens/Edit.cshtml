@@ -1,0 +1,272 @@
+﻿@model DoAnHMS.Models.NhanVien
+
+@{
+    ViewBag.Title = "Hồ sơ nhân sự - Cập nhật";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    :root {
+        --luxury-gold: #c5a059;
+        --luxury-navy: #1a1d2e;
+    }
+
+    .edit-container {
+        padding: 40px 0;
+        background-color: #f8f9fa;
+    }
+
+    .luxury-card {
+        background: #fff;
+        border: none;
+        border-radius: 0;
+        box-shadow: 0 15px 50px rgba(0,0,0,0.05);
+        position: relative;
+    }
+
+        .luxury-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--luxury-gold);
+        }
+
+    .card-header-luxury {
+        padding: 30px 40px;
+        background: #fff;
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+        .card-header-luxury h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--luxury-navy);
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+    .card-body-luxury {
+        padding: 40px;
+    }
+
+    /* Profile Image Section */
+    .profile-upload-section {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .image-preview-container {
+        width: 150px;
+        height: 150px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        border: 3px solid var(--luxury-gold);
+        padding: 5px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    #imgPreview {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .upload-btn-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+    }
+
+    .btn-upload-luxury {
+        border: 1px solid var(--luxury-gold);
+        background: transparent;
+        color: var(--luxury-gold);
+        padding: 8px 20px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+
+        .btn-upload-luxury:hover {
+            background: var(--luxury-gold);
+            color: #fff;
+        }
+
+    /* Form Design */
+    .label-luxury {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--luxury-navy);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 8px;
+    }
+
+    .form-control-luxury {
+        border-radius: 0;
+        border: 1px solid #e1e1e1;
+        padding: 12px 15px;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+
+        .form-control-luxury:focus {
+            border-color: var(--luxury-gold);
+            box-shadow: none;
+        }
+
+    .btn-save-luxury {
+        background: var(--luxury-navy);
+        color: #fff;
+        border-radius: 0;
+        padding: 15px 50px;
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border: none;
+        transition: 0.4s;
+    }
+
+        .btn-save-luxury:hover {
+            background: var(--luxury-gold);
+            transform: translateY(-2px);
+        }
+
+    #Avatar {
+        display: none;
+    }
+</style>
+
+<div class="edit-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="luxury-card">
+                    <div class="card-header-luxury">
+                        <h3>CẬP NHẬT HỒ SƠ NHÂN VIÊN</h3>
+                        <p class="text-muted small m-0">Thay đổi thông tin nhân sự định danh #@Model.maNV</p>
+                    </div>
+
+                    <div class="card-body-luxury">
+                        @using (Html.BeginForm("Edit", "Nhanviens", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @Html.HiddenFor(model => model.maNV)
+
+                            <div class="profile-upload-section">
+                                <div class="image-preview-container">
+                                    <img id="imgPreview" src="~/Images/@Model.hinhAnh" onerror="this.src='/Images/avatar.png'" />
+                                </div>
+                                <div class="upload-btn-wrapper">
+                                    <button type="button" class="btn-upload-luxury" id="btnBrowse">Thay đổi ảnh đại diện</button>
+                                    <input type="file" name="Avatar" id="Avatar" accept="image/*" />
+                                    @Html.HiddenFor(model => model.hinhAnh, new { id = "hinhAnh" })
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label class="label-luxury">Mã nhân viên (Cố định)</label>
+                                    @Html.EditorFor(model => model.maNV, new { htmlAttributes = new { @class = "form-control form-control-luxury", @readonly = "readonly" } })
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <label class="label-luxury">Tên nhân viên</label>
+                                    @Html.EditorFor(model => model.tenNV, new { htmlAttributes = new { @class = "form-control form-control-luxury", placeholder = "Nhập họ tên đầy đủ" } })
+                                    @Html.ValidationMessageFor(model => model.tenNV, "", new { @class = "text-danger small" })
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <label class="label-luxury">Giới tính</label>
+                                    <div class="mt-2">
+                                        <label class="mr-4">
+                                            @Html.RadioButtonFor(model => model.gioiTinh, "True") <span class="ml-1">Nam</span>
+                                        </label>
+                                        <label>
+                                            @Html.RadioButtonFor(model => model.gioiTinh, "False") <span class="ml-1">Nữ</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <label class="label-luxury">Ngày sinh</label>
+                                    @Html.TextBoxFor(model => model.ngaySinh, new { @class = "form-control form-control-luxury datepicker", @Value = Model.ngaySinh.ToString("MM/dd/yyyy"), @readonly = "readonly", style = "background-color: #fff" })
+                                    @Html.ValidationMessageFor(model => model.ngaySinh, "", new { @class = "text-danger small" })
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <label class="label-luxury">Số điện thoại</label>
+                                    @Html.EditorFor(model => model.sdt, new { htmlAttributes = new { @class = "form-control form-control-luxury", placeholder = "0xxx xxx xxx" } })
+                                    @Html.ValidationMessageFor(model => model.sdt, "", new { @class = "text-danger small" })
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <label class="label-luxury">Email</label>
+                                    @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control form-control-luxury", placeholder = "email@hotel.com" } })
+                                    @Html.ValidationMessageFor(model => model.email, "", new { @class = "text-danger small" })
+                                </div>
+
+                                <div class="col-md-12 mb-5">
+                                    <label class="label-luxury">Địa chỉ cư trú</label>
+                                    @Html.EditorFor(model => model.diaChi, new { htmlAttributes = new { @class = "form-control form-control-luxury", placeholder = "Số nhà, tên đường, quận/huyện..." } })
+                                    @Html.ValidationMessageFor(model => model.diaChi, "", new { @class = "text-danger small" })
+                                </div>
+                            </div>
+
+                            <div class="text-center">
+                                <a href="@Url.Action("Index")" class="btn btn-link text-muted mr-3" style="text-decoration:none; font-weight:700; font-size:12px; letter-spacing:1px;">HUỶ BỎ</a>
+                                <button type="submit" class="btn btn-save-luxury shadow-sm">XÁC NHẬN CẬP NHẬT</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            
+            $('.datepicker').datepicker({
+                dateFormat: "mm/dd/yy",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-60:+0"
+            });
+
+           
+            $("#btnBrowse").click(function () {
+                $("#Avatar").click();
+            });
+
+            $("#Avatar").change(function () {
+                if (this.files && this.files[0]) {
+                    
+                    var fileName = this.files[0].name;
+                    $("#hinhAnh").val(fileName);
+
+                   
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#imgPreview').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        });
+    </script>
+}

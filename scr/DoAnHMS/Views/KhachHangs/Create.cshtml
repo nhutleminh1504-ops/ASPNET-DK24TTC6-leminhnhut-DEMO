@@ -1,0 +1,297 @@
+﻿@model DoAnHMS.Models.KhachHang
+
+@{
+    ViewBag.Title = "Đăng ký khách hàng mới";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    /* Bảng màu Luxury */
+    :root {
+        --luxury-gold: #c5a059;
+        --luxury-navy: #1a1d2e;
+        --luxury-bg: #f8f9fa;
+    }
+
+    .luxury-wrapper {
+        padding: 40px 0;
+        background-color: var(--luxury-bg);
+        min-height: 100vh;
+    }
+
+    .create-card {
+        background: #fff;
+        border: none;
+        border-radius: 0;
+        box-shadow: 0 15px 50px rgba(0,0,0,0.05);
+        position: relative;
+    }
+
+        .create-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--luxury-gold);
+        }
+
+    .card-header-luxury {
+        background: #fff;
+        padding: 40px 40px 20px 40px;
+        border-bottom: none;
+    }
+
+        .card-header-luxury h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--luxury-navy);
+            letter-spacing: 2px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 1.5rem;
+        }
+
+    .card-body-luxury {
+        padding: 20px 40px 40px 40px;
+    }
+
+    /* Định dạng Form Group */
+    .section-divider {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--luxury-gold);
+        letter-spacing: 2px;
+        margin: 30px 0 20px 0;
+        display: flex;
+        align-items: center;
+    }
+
+        .section-divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #eee;
+            margin-left: 15px;
+        }
+
+    .form-label-luxury {
+        font-size: 12px;
+        font-weight: 600;
+        color: #999;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    .input-group-luxury {
+        border-bottom: 1px solid #e0e0e0;
+        margin-bottom: 5px;
+        transition: all 0.3s;
+    }
+
+        .input-group-luxury:focus-within {
+            border-bottom: 1px solid var(--luxury-gold);
+        }
+
+    .input-luxury {
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 10px 0 !important;
+        font-weight: 500;
+        color: var(--luxury-navy);
+        box-shadow: none !important;
+    }
+
+    .input-group-text-luxury {
+        background: none !important;
+        border: none !important;
+        color: var(--luxury-gold);
+        padding-left: 0;
+    }
+
+    /* Custom Radio Buttons */
+    .gender-option {
+        margin-right: 25px;
+        cursor: pointer;
+        font-weight: 500;
+        color: var(--luxury-navy);
+    }
+
+    /* Buttons */
+    .btn-luxury-save {
+        background: var(--luxury-navy);
+        color: #fff;
+        border-radius: 0;
+        padding: 15px 40px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border: none;
+        transition: all 0.4s;
+    }
+
+        .btn-luxury-save:hover {
+            background: var(--luxury-gold);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+    .btn-luxury-cancel {
+        color: #999;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+        .btn-luxury-cancel:hover {
+            color: var(--luxury-navy);
+            text-decoration: none;
+        }
+</style>
+
+<div class="luxury-wrapper">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-11">
+                <div class="create-card">
+
+                    <div class="card-header-luxury text-center">
+                        <h3>Đăng ký thành viên mới</h3>
+                        <p class="text-muted small">Khởi tạo hồ sơ khách hàng tiêu chuẩn hệ thống</p>
+                    </div>
+
+                    <div class="card-body-luxury">
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger small" })
+
+                            <div class="section-divider">Hồ sơ định danh</div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-label-luxury">Mã khách hàng</label>
+                                        <div class="input-group input-group-luxury">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text-luxury"><i class="fas fa-fingerprint"></i></span>
+                                            </div>
+                                            @Html.EditorFor(model => model.maKH, new { htmlAttributes = new { @class = "form-control input-luxury", @readonly = "readonly", @Value = ViewBag.maKH } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label class="form-label-luxury">Họ và tên khách hàng</label>
+                                        <div class="input-group input-group-luxury">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text-luxury"><i class="fas fa-user-edit"></i></span>
+                                            </div>
+                                            @Html.EditorFor(model => model.tenKH, new { htmlAttributes = new { @class = "form-control input-luxury", placeholder = "Nhập tên đầy đủ (Ví dụ: NGUYEN VAN A)" } })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.tenKH, "", new { @class = "text-danger small" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-label-luxury">Giới tính</label>
+                                        <div class="d-flex align-items-center py-2">
+                                            <label class="gender-option mb-0">
+                                                @Html.RadioButtonFor(model => model.gioiTinh, "True", new { @checked = "checked" }) Nam
+                                            </label>
+                                            <label class="gender-option mb-0">
+                                                @Html.RadioButtonFor(model => model.gioiTinh, "False") Nữ
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-label-luxury">CCCD / Passport</label>
+                                        <div class="input-group input-group-luxury">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text-luxury"><i class="fas fa-id-card"></i></span>
+                                            </div>
+                                            @Html.EditorFor(model => model.cmnd_passport, new { htmlAttributes = new { @class = "form-control input-luxury" } })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.cmnd_passport, "", new { @class = "text-danger small" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-label-luxury">Quốc tịch</label>
+                                        <div class="input-group input-group-luxury">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text-luxury"><i class="fas fa-globe"></i></span>
+                                            </div>
+                                            @Html.EditorFor(model => model.quocTich, new { htmlAttributes = new { @class = "form-control input-luxury", @Value = "Việt Nam" } })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.quocTich, "", new { @class = "text-danger small" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section-divider">Thông tin liên lạc</div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label-luxury">Số điện thoại</label>
+                                        <div class="input-group input-group-luxury">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text-luxury"><i class="fas fa-phone"></i></span>
+                                            </div>
+                                            @Html.EditorFor(model => model.sdt, new { htmlAttributes = new { @class = "form-control input-luxury" } })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.sdt, "", new { @class = "text-danger small" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label-luxury">Địa chỉ Email</label>
+                                        <div class="input-group input-group-luxury">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text-luxury"><i class="fas fa-envelope"></i></span>
+                                            </div>
+                                            @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control input-luxury", placeholder = "email@example.com" } })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.email, "", new { @class = "text-danger small" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label class="form-label-luxury">Địa chỉ thường trú</label>
+                                        <div class="input-group input-group-luxury">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text-luxury"><i class="fas fa-map-marker-alt"></i></span>
+                                            </div>
+                                            @Html.EditorFor(model => model.diaChi, new { htmlAttributes = new { @class = "form-control input-luxury" } })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.diaChi, "", new { @class = "text-danger small" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-5 d-flex justify-content-between align-items-center">
+                                <a href="@Url.Action("Index")" class="btn-luxury-cancel">
+                                    <i class="fas fa-arrow-left mr-2"></i> Quay lại danh sách
+                                </a>
+                                <button type="submit" class="btn-luxury-save">
+                                    Lưu hồ sơ khách hàng <i class="fas fa-check ml-2"></i>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

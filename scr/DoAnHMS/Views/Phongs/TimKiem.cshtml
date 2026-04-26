@@ -1,0 +1,147 @@
+﻿@model IEnumerable<DoAnHMS.Models.Phong>
+
+@{
+    ViewBag.Title = "Phòng - Tìm kiếm";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var grid = new WebGrid(Model, canPage: true, defaultSort: "maP", rowsPerPage: 5);
+}
+
+<style type="text/css">
+    /* Tối ưu hóa Card chứa bộ lọc */
+    .search-container {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        padding: 25px;
+        margin-bottom: 30px;
+        border-top: 4px solid #17a2b8;
+    }
+
+    .search-title {
+        font-weight: bold;
+        color: #17a2b8;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Style cho Grid tương tự các trang trước */
+    .grid-footer {
+        color: #000;
+        text-align: center;
+        font-weight: bold;
+        padding: 10px;
+    }
+
+        .grid-footer a {
+            background-color: #ffffff;
+            color: #17a2b8;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 5px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 0 2px;
+        }
+
+            .grid-footer a:hover {
+                background-color: #17a2b8;
+                color: white;
+            }
+
+    .alternatingRowStyle {
+        background-color: #f8f9fa;
+    }
+
+    .img-thumbnail-custom {
+        width: 80px;
+        height: auto;
+        border-radius: 5px;
+    }
+
+    .btn-search-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="search-container">
+        <h4 class="search-title"><i class="fa fa-search" style="margin-right:10px"></i> BỘ LỌC TÌM KIẾM</h4>
+
+        @using (Html.BeginForm("TimKiem", "Phongs", FormMethod.Get))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="control-label"><b>Tình trạng</b></label>
+                    <div style="padding-top: 8px;">
+                        <label class="radio-inline" style="margin-right:15px; cursor:pointer">
+                            <input type="radio" name="tinhTrang" value="Trống" checked="checked" /> Trống
+                        </label>
+                        <label class="radio-inline" style="cursor:pointer">
+                            <input type="radio" name="tinhTrang" value="Đang sử dụng" /> Đang sử dụng
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="control-label"><b>Loại phòng</b></label>
+                    @Html.DropDownList("maLP", null, "--- Tất cả loại phòng ---", htmlAttributes: new { @class = "form-control" })
+                </div>
+
+                <div class="col-md-4">
+                    <label class="control-label">&nbsp;</label>
+                    <div class="btn-search-group">
+                        <button type="submit" class="btn btn-info" style="flex:1; font-weight:bold">
+                            <i class="fa fa-search"></i> Tìm kiếm
+                        </button>
+                        <button type="button" class="btn btn-secondary" style="flex:1" onclick="location.href='@Url.Action("TimKiem", "Phongs")'">
+                            <i class="fa fa-refresh"></i> Nhập mới
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div id="gridContent" class="table-responsive">
+        @if (ViewBag.TB != null)
+        {
+            <div class="alert alert-info">@ViewBag.TB</div>
+        }
+
+        @grid.GetHtml(
+            tableStyle: "table table-bordered table-hover bg-white",
+            footerStyle: "grid-footer",
+            fillEmptyRows: false,
+            mode: WebGridPagerModes.All,
+            alternatingRowStyle: "alternatingRowStyle",
+            columns: grid.Columns(
+                grid.Column("STT", format: item => item.WebGrid.Rows.IndexOf(item) + 1 + (grid.PageIndex * grid.RowsPerPage)),
+                grid.Column("maP", "Mã phòng"),
+                grid.Column("maLP", "Mã loại"),
+                grid.Column("LoaiPhong.hinhAnh", "Hình Ảnh", format: @<text>
+                        <img src="@Url.Content("~/Images/" + item.LoaiPhong.hinhAnh)" class="img-thumbnail-custom" />
+                </text>),
+         grid.Column("LoaiPhong.donGia", "Đơn giá", format: @<text>@item.LoaiPhong.donGia.ToString("#,##0") VNĐ</text>),
+grid.Column("tinhTrang", "Tình trạng", format: @<text>
+        @if (item.tinhTrang.ToString() == "Trống" || item.tinhTrang == true)
+        {
+            <span class="label label-success">Trống</span>
+        }
+        else
+        {
+            <span class="label label-danger">Đang sử dụng</span>
+        }
+</text>),
+grid.Column("Chức năng", format: @<text>
+    <a href="@Url.Action("Edit", new { id = item.maP })"><img src="/images/edit.png" width="20" title="Cập nhật" /></a>
+    <a href="@Url.Action("Details", new { id = item.maP })"><img src="/images/details.png" width="20" title="Chi tiết" /></a>
+    <a href="@Url.Action("Delete", new { id = item.maP })"><img src="/images/delete.png" width="20" title="Xóa" /></a>
+</text>)
+)
+)
+    </div>
+</div>

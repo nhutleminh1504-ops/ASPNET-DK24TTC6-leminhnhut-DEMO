@@ -1,0 +1,91 @@
+﻿@model DoAnHMS.Models.Phong
+
+@{
+    ViewBag.Title = "Chi tiết phòng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    /* CSS này giúp trang có chiều sâu và bố cục rõ ràng hơn */
+    .room-detail-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        padding: 25px;
+        margin-top: 20px;
+    }
+
+    .img-container img {
+        width: 100%;
+        max-height: 400px;
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .info-table td {
+        padding: 12px 5px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .label-custom {
+        font-weight: bold;
+        color: #666;
+        width: 140px;
+    }
+
+    .price-text {
+        color: #d9534f;
+        font-size: 1.4em;
+        font-weight: bold;
+    }
+
+    .btn-action {
+        margin-top: 20px;
+        display: inline-block;
+    }
+</style>
+
+<div class="container">
+    <div class="room-detail-card">
+        <h2 style="color: #2c3e50; margin-bottom: 20px; border-left: 5px solid #3498db; padding-left: 15px;">
+            Thông tin chi tiết: @Model.maP
+        </h2>
+
+        <div class="row">
+            <div class="col-md-5 img-container">
+                <img src="/Images/@Model.LoaiPhong.hinhAnh" alt="Hình ảnh phòng" />
+            </div>
+
+            <div class="col-md-7">
+                <table class="info-table" style="width: 100%; font-size: 16px;">
+                    <tr>
+                        <td class="label-custom">Mã phòng</td>
+                        <td><span class="badge badge-primary" style="background-color: #3498db; padding: 5px 10px;">@Model.maP</span></td>
+                    </tr>
+                    <tr>
+                        <td class="label-custom">Loại phòng</td>
+                        <td>@Model.LoaiPhong.tenLP</td>
+                    </tr>
+                    <tr>
+                        <td class="label-custom">Đơn giá</td>
+                        <td><span class="price-text">@string.Format("{0:0,0}", Model.LoaiPhong.donGia) VNĐ</span></td>
+                    </tr>
+                    <tr>
+                        <td class="label-custom">Sức chứa</td>
+                        <td>@Model.LoaiPhong.sucChua người</td>
+                    </tr>
+                    <tr>
+                        <td class="label-custom">Mô tả</td>
+                        <td style="color: #7f8c8d; font-style: italic;">@Model.LoaiPhong.moTa</td>
+                    </tr>
+                </table>
+
+                <div class="btn-action">
+                    @Html.ActionLink("Chỉnh sửa", "Edit", new { id = Model.maP }, new { @class = "btn btn-warning", style = "margin-right: 10px; font-weight: bold;" })
+                    @Html.ActionLink("Trở về danh sách", "Index", null, new { @class = "btn btn-outline-secondary" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

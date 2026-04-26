@@ -1,0 +1,108 @@
+﻿@model DoAnHMS.Models.Phong
+
+@{
+    ViewBag.Title = "Xoá phòng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .delete-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        padding: 30px;
+        margin-top: 30px;
+        border-top: 5px solid #d9534f; /* Màu đỏ cảnh báo */
+    }
+
+    .alert-warning-custom {
+        background-color: #fcf8e3;
+        border: 1px solid #faebcc;
+        color: #8a6d3b;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 25px;
+        font-weight: bold;
+    }
+
+    .info-row {
+        margin-bottom: 15px;
+        font-size: 16px;
+        border-bottom: 1px solid #f9f9f9;
+        padding-bottom: 10px;
+    }
+
+    .info-label {
+        font-weight: bold;
+        color: #555;
+        width: 150px;
+        display: inline-block;
+    }
+
+    .info-value {
+        color: #333;
+    }
+
+    .btn-delete {
+        padding: 10px 30px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="delete-card">
+                <h2 class="text-danger"><i class="fa fa-trash"></i> XOÁ PHÒNG</h2>
+
+                <div class="alert-warning-custom">
+                    <i class="fa fa-exclamation-triangle"></i> Bạn có chắc chắn muốn xoá thông tin phòng này không? Hành động này không thể hoàn tác.
+                </div>
+
+                <div class="info-container">
+                    <div class="info-row">
+                        <span class="info-label">Mã phòng:</span>
+                        <span class="info-value">@Model.maP</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Loại phòng:</span>
+                        <span class="info-value">@Model.LoaiPhong.tenLP</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Tình trạng:</span>
+                        <span class="info-value">
+                            @if (Model.tinhTrang.ToString() == "True")
+                            {
+                                <span class="label label-success">Trống</span>
+                            }
+                            else
+                            {
+                                <span class="label label-danger">Đang sử dụng</span>
+                            }
+                        </span>
+                    </div>
+                </div>
+
+                <hr />
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.maP)
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-danger btn-delete">
+                            <i class="fa fa-check"></i> Xác nhận xoá
+                        </button>
+                        <a href="@Url.Action("Index")" class="btn btn-default" style="padding: 10px 20px;">
+                            <i class="fa fa-times"></i> Hủy bỏ
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

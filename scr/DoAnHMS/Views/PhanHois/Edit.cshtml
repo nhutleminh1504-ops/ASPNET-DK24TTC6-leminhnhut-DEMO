@@ -1,0 +1,226 @@
+﻿@model DoAnHMS.Models.PhanHoi
+
+@{
+    ViewBag.Title = "Xử lý phản hồi khách hàng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    :root {
+        --luxury-gold: #c5a059;
+        --luxury-navy: #1a1d2e;
+        --soft-gray: #f8f9fa;
+    }
+
+    .edit-wrapper {
+        padding: 40px 0;
+        background-color: var(--soft-gray);
+        min-height: 100vh;
+    }
+
+    .luxury-card {
+        background: #fff;
+        border: none;
+        border-radius: 0;
+        box-shadow: 0 15px 50px rgba(0,0,0,0.05);
+        position: relative;
+    }
+
+        .luxury-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--luxury-gold);
+        }
+
+    .card-header-luxury {
+        padding: 40px 40px 10px;
+        background: #fff;
+        border: none;
+    }
+
+        .card-header-luxury h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--luxury-navy);
+            letter-spacing: 2px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 1.4rem;
+        }
+
+    .card-body-luxury {
+        padding: 30px 40px 40px;
+    }
+
+    /* Định dạng nhãn thông tin */
+    .label-luxury {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--luxury-gold);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    /* Định dạng Input Readonly */
+    .readonly-luxury {
+        background-color: #fafafa !important;
+        border: none !important;
+        border-bottom: 1px solid #eee !important;
+        border-radius: 0 !important;
+        color: #555 !important;
+        font-weight: 500;
+        padding-left: 0 !important;
+        box-shadow: none !important;
+        cursor: default;
+    }
+
+    /* Khu vực nội dung phản hồi */
+    .feedback-content-box {
+        background: #fcfaf5;
+        border: 1px solid #f1e9db;
+        padding: 20px;
+        font-style: italic;
+        color: #444;
+        margin-top: 5px;
+        line-height: 1.6;
+    }
+
+    /* Custom Radio Buttons */
+    .status-panel {
+        background: #fdfdfd;
+        border: 1px solid #f1f1f1;
+        padding: 25px;
+        margin: 30px 0;
+    }
+
+    .radio-luxury {
+        margin-right: 30px;
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--luxury-navy);
+    }
+
+        .radio-luxury input[type="radio"] {
+            accent-color: var(--luxury-gold);
+            transform: scale(1.1);
+            margin-right: 8px;
+        }
+
+    /* Nút bấm */
+    .btn-luxury-update {
+        background: var(--luxury-navy);
+        color: #fff;
+        border-radius: 0;
+        padding: 15px 45px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border: none;
+        transition: all 0.4s;
+    }
+
+        .btn-luxury-update:hover {
+            background: var(--luxury-gold);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(197, 160, 89, 0.2);
+        }
+
+    .btn-luxury-back {
+        color: #999;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+        .btn-luxury-back:hover {
+            color: var(--luxury-navy);
+            text-decoration: none;
+        }
+</style>
+
+<div class="edit-wrapper">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-9 col-lg-11">
+                <div class="luxury-card">
+                    <div class="card-header-luxury d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="m-0">Xử lý ý kiến khách hàng</h3>
+                            <p class="text-muted small mt-1">Ghi nhận và cập nhật tình trạng phản hồi số <strong>#@Model.id</strong></p>
+                        </div>
+                        <a href="@Url.Action("Index")" class="btn-luxury-back">
+                            <i class="fas fa-times mr-2"></i> Đóng
+                        </a>
+                    </div>
+
+                    <div class="card-body-luxury">
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger small" })
+                            @Html.HiddenFor(model => model.id)
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label class="label-luxury">Khách hàng phản hồi</label>
+                                    @Html.EditorFor(model => model.hoTen, new { htmlAttributes = new { @class = "form-control readonly-luxury", @readonly = "readonly" } })
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <label class="label-luxury">Thời gian nhận</label>
+                                    @Html.EditorFor(model => model.ngayGui, new { htmlAttributes = new { @class = "form-control readonly-luxury", @readonly = "readonly" } })
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label class="label-luxury">Số điện thoại liên lạc</label>
+                                    @Html.EditorFor(model => model.sdt, new { htmlAttributes = new { @class = "form-control readonly-luxury", @readonly = "readonly" } })
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <label class="label-luxury">Địa chỉ Email</label>
+                                    @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control readonly-luxury", @readonly = "readonly" } })
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label class="label-luxury">Nội dung phản hồi từ khách hàng</label>
+                                <div class="feedback-content-box shadow-sm">
+                                    <i class="fas fa-quote-left mr-2" style="color: #e9d1a1;"></i>
+                                    @Model.noiDung
+                                </div>
+                            </div>
+
+                            <div class="status-panel">
+                                <label class="label-luxury d-block mb-3">Trạng thái xử lý hệ thống</label>
+                                <div class="d-flex align-items-center">
+                                    <label class="radio-luxury mb-0">
+                                        @Html.RadioButtonFor(model => model.tinhTrang, true) Đã ghi nhận & xử lý
+                                    </label>
+                                    <label class="radio-luxury mb-0">
+                                        @Html.RadioButtonFor(model => model.tinhTrang, false) Đang chờ kiểm tra
+                                    </label>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.tinhTrang, "", new { @class = "text-danger small mt-2 d-block" })
+                            </div>
+
+                            <div class="mt-5 text-right">
+                                <button type="submit" class="btn btn-luxury-update shadow">
+                                    Xác nhận cập nhật <i class="fas fa-check-circle ml-2"></i>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

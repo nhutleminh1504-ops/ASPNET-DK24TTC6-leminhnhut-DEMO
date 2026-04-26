@@ -1,0 +1,240 @@
+﻿@model DoAnHMS.Models.QuanTri
+
+@{
+    ViewBag.Title = "Thu hồi tài khoản hệ thống";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    :root {
+        --luxury-danger: #8b0000;
+        --luxury-navy: #1a1d2e;
+        --luxury-gold: #c5a059;
+    }
+
+    .delete-page-wrapper {
+        padding: 50px 0;
+        background-color: #f8f9fa;
+        min-height: 90vh;
+    }
+
+    .alert-card {
+        background: #fff;
+        border: none;
+        border-radius: 0;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+        position: relative;
+    }
+
+        /* Thanh cảnh báo trên cùng */
+        .alert-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--luxury-danger);
+        }
+
+    .alert-header {
+        padding: 40px;
+        text-align: center;
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+        .alert-header i {
+            font-size: 3.5rem;
+            color: var(--luxury-danger);
+            margin-bottom: 20px;
+        }
+
+        .alert-header h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--luxury-danger);
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+    .alert-body {
+        padding: 40px 60px;
+    }
+
+    /* Account Summary Box */
+    .account-summary {
+        background: #fcfcfc;
+        border: 1px solid #f1f1f1;
+        padding: 25px;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+    }
+
+    .user-icon-circle {
+        width: 70px;
+        height: 70px;
+        background: var(--luxury-navy);
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        margin-right: 25px;
+    }
+
+    .account-main-info b {
+        font-size: 1.2rem;
+        color: var(--luxury-navy);
+        display: block;
+    }
+
+    .account-main-info span {
+        color: var(--luxury-gold);
+        font-weight: 700;
+        font-size: 12px;
+        text-transform: uppercase;
+    }
+
+    /* Detail List */
+    .detail-list {
+        margin-bottom: 40px;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 0;
+        border-bottom: 1px dashed #eee;
+    }
+
+    .detail-label {
+        color: #999;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .detail-value {
+        color: var(--luxury-navy);
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .status-pill {
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .pill-active {
+        background: #e6f4ea;
+        color: #1e7e34;
+    }
+
+    .pill-locked {
+        background: #fdecea;
+        color: #d9534f;
+    }
+
+    /* Action Buttons */
+    .btn-delete-confirm {
+        background: var(--luxury-danger);
+        color: #fff;
+        border: none;
+        padding: 15px 45px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        transition: 0.3s;
+    }
+
+        .btn-delete-confirm:hover {
+            background: #000;
+            transform: translateY(-2px);
+        }
+
+    .btn-back-cancel {
+        color: #999;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-right: 25px;
+        text-decoration: none;
+    }
+
+        .btn-back-cancel:hover {
+            color: var(--luxury-navy);
+            text-decoration: underline;
+        }
+</style>
+
+<div class="delete-page-wrapper">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="alert-card">
+
+                    <div class="alert-header">
+                        <i class="fas fa-user-shield"></i>
+                        <h3>Xác nhận thu hồi quyền</h3>
+                        <p class="text-muted small mt-2">Hành động này sẽ xóa vĩnh viễn tài khoản đăng nhập khỏi hệ thống.</p>
+                    </div>
+
+                    <div class="alert-body">
+                        <div class="account-summary">
+                            <div class="user-icon-circle">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="account-main-info">
+                                <b>@Model.username</b>
+                                <span>Nhóm: @Model.NhomNhanVien.TenNhom</span>
+                            </div>
+                        </div>
+
+                        <div class="detail-list">
+                            <div class="detail-row">
+                                <span class="detail-label">Nhân viên sở hữu</span>
+                                <span class="detail-value">@Model.NhanVien.tenNV</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Mật khẩu định danh</span>
+                                <span class="detail-value" style="letter-spacing: 2px;">••••••••</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Trạng thái hiện tại</span>
+                                <span class="detail-value">
+                                    @if (Model.tinhTrang == true)
+                                    {
+                                        <span class="status-pill pill-active">Hoạt động</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-pill pill-locked">Tạm khóa</span>
+                                    }
+                                </span>
+                            </div>
+                        </div>
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="d-flex justify-content-end align-items-center">
+                                <a href="@Url.Action("Index")" class="btn-back-cancel">Hủy bỏ thao tác</a>
+                                <button type="submit" class="btn btn-delete-confirm shadow">
+                                    Xác nhận xóa tài khoản
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

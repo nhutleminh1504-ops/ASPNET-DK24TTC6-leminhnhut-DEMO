@@ -1,0 +1,211 @@
+﻿@model DoAnHMS.Models.NhanVien
+
+@{
+    ViewBag.Title = "Gỡ bỏ hồ sơ nhân sự";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    :root {
+        --luxury-danger: #8b0000;
+        --luxury-navy: #1a1d2e;
+        --luxury-gold: #c5a059;
+    }
+
+    .delete-container {
+        padding: 50px 0;
+        background-color: #fcfcfc;
+        min-height: 90vh;
+    }
+
+    .confirm-card {
+        background: #fff;
+        border: none;
+        border-radius: 0;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+        position: relative;
+        overflow: hidden;
+    }
+
+        /* Thanh cảnh báo phía trên */
+        .confirm-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--luxury-danger);
+        }
+
+    .card-header-warning {
+        padding: 40px;
+        text-align: center;
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+        .card-header-warning i {
+            font-size: 3rem;
+            color: var(--luxury-danger);
+            margin-bottom: 15px;
+        }
+
+        .card-header-warning h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--luxury-danger);
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 1.2rem;
+        }
+
+    .card-body-luxury {
+        padding: 40px;
+    }
+
+    /* Tóm tắt thông tin nhân viên */
+    .employee-summary {
+        display: flex;
+        align-items: center;
+        background: #fdfdfd;
+        padding: 20px;
+        border: 1px solid #f1f1f1;
+        margin-bottom: 30px;
+    }
+
+    .emp-thumb {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 20px;
+        border: 2px solid var(--luxury-gold);
+    }
+
+    .emp-info-text b {
+        color: var(--luxury-navy);
+        font-size: 1.1rem;
+        display: block;
+    }
+
+    .emp-info-text span {
+        color: var(--luxury-gold);
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    /* Danh sách thông tin */
+    .info-list {
+        margin-bottom: 40px;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px dashed #eee;
+        font-size: 14px;
+    }
+
+    .info-label {
+        color: #999;
+        text-transform: uppercase;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+
+    .info-value {
+        color: var(--luxury-navy);
+        font-weight: 500;
+    }
+
+    /* Buttons */
+    .btn-luxury-delete {
+        background: var(--luxury-danger);
+        color: #fff;
+        border: none;
+        border-radius: 0;
+        padding: 15px 40px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        transition: 0.4s;
+    }
+
+        .btn-luxury-delete:hover {
+            background: #000;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+    .btn-luxury-cancel {
+        color: #999;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        text-decoration: none;
+        margin-right: 20px;
+    }
+
+        .btn-luxury-cancel:hover {
+            color: var(--luxury-navy);
+            text-decoration: underline;
+        }
+</style>
+
+<div class="delete-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <div class="confirm-card">
+                    <div class="card-header-warning">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <h3>Xác nhận xóa hồ sơ</h3>
+                        <p class="text-muted small">Hành động này không thể hoàn tác. Bạn có chắc chắn muốn gỡ bỏ nhân viên này khỏi hệ thống?</p>
+                    </div>
+
+                    <div class="card-body-luxury">
+                        <div class="employee-summary">
+                            <img src="/Images/@Model.hinhAnh" class="emp-thumb" onerror="this.src='/Images/avatar.png'" />
+                            <div class="emp-info-text">
+                                <b>@Model.tenNV</b>
+                                <span>Mã nhân sự: #@Model.maNV</span>
+                            </div>
+                        </div>
+
+                        <div class="info-list">
+                            <div class="info-row">
+                                <span class="info-label">Giới tính</span>
+                                <span class="info-value">@(Model.gioiTinh == true ? "Nam" : "Nữ")</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Ngày sinh</span>
+                                <span class="info-value">@Model.ngaySinh.ToString("dd/MM/yyyy")</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Email liên hệ</span>
+                                <span class="info-value">@Model.email</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Số điện thoại</span>
+                                <span class="info-value">@Model.sdt</span>
+                            </div>
+                        </div>
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="d-flex justify-content-end align-items-center">
+                                <a href="@Url.Action("Index")" class="btn-luxury-cancel">Hủy bỏ</a>
+                                <button type="submit" class="btn btn-luxury-delete shadow-sm">Xác nhận xóa</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

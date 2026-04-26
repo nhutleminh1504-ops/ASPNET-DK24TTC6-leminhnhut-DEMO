@@ -1,0 +1,151 @@
+﻿@model DoAnHMS.Models.PhieuDatPhong
+
+@{
+    ViewBag.Title = "Phiếu đặt phòng - Chi tiết";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var grid = new WebGrid(Model.CTPhieuDatPhongs, canPage: false); 
+}
+
+<style>
+    .detail-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        padding: 30px;
+        margin-top: 20px;
+        border-top: 5px solid #4e73df;
+    }
+
+    .info-group {
+        margin-bottom: 15px;
+        padding: 10px;
+        border-bottom: 1px solid #f8f9fc;
+    }
+
+    .info-label {
+        font-weight: 700;
+        color: #4e73df;
+        width: 180px;
+        display: inline-block;
+    }
+
+    .status-badge {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+
+    .bg-waiting {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    .bg-success-custom {
+        background-color: #d1e7dd;
+        color: #0f5132;
+    }
+
+    .table-detail th {
+        background-color: #f8f9fc;
+        color: #4e73df;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+    }
+
+    .total-section {
+        background-color: #f8f9fc;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 20px;
+        text-align: right;
+    }
+
+    .price-total {
+        color: #e74a3b;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="detail-card">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="m-0 font-weight-bold text-primary"><i class="fas fa-file-invoice"></i> THÔNG TIN PHIẾU ĐẶT</h3>
+            <div>
+                <a href="@Url.Action("Edit", new { id = Model.maPDP })" class="btn btn-warning btn-sm">
+                    <i class="fas fa-edit"></i> Chỉnh sửa
+                </a>
+                <a href="@Url.Action("Index")" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-arrow-left"></i> Quay lại
+                </a>
+            </div>
+        </div>
+        <hr />
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="info-group">
+                    <span class="info-label">Mã phiếu:</span> <span>@Model.maPDP</span>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">Khách hàng:</span> <span class="font-weight-bold">@Model.KhachHang.tenKH</span>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">Ngày đến:</span> <span>@Model.ngayDen.ToString("dd/MM/yyyy")</span>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">Ngày đi:</span> <span>@Model.ngayDi.ToString("dd/MM/yyyy")</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-group">
+                    <span class="info-label">Số người:</span> <span>@Model.soNguoi người</span>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">Tình trạng:</span>
+                    <span class="status-badge @(Model.tinhTrang == true ? "bg-success-custom" : "bg-waiting")">
+                        @(Model.tinhTrang == true ? "Đã nhận phòng" : "Chưa nhận phòng")
+                    </span>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">Nhân viên lập:</span> <span>@Model.NhanVien.tenNV</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="m-0 font-weight-bold"><i class="fas fa-bed"></i> CHI TIẾT CÁC PHÒNG ĐẶT</h5>
+                <a href="@Url.Action("CreateCTPhieuDat", new { maPDP = Model.maPDP})" class="btn btn-outline-success btn-sm">
+                    <i class="fas fa-plus"></i> Đặt thêm phòng
+                </a>
+            </div>
+
+            <div class="table-responsive">
+                @grid.GetHtml(
+                    tableStyle: "table table-bordered table-detail",
+                    alternatingRowStyle: "bg-light",
+                    columns: grid.Columns(
+                        grid.Column("STT", format: item => item.WebGrid.Rows.IndexOf(item) + 1),
+                        grid.Column("maP", "Mã phòng", style: "font-weight-bold"),
+                        grid.Column("Phong.LoaiPhong.tenLP", "Loại Phòng"),
+                        grid.Column("Phong.LoaiPhong.sucChua", "Sức chứa", style: "text-center"),
+                        grid.Column("tienCoc", "Tiền cọc", format: @<text>@item.tienCoc.ToString("#,##0") VNĐ</text>),
+grid.Column(header: "Thao tác", style: "text-center", format: @<text>
+                        <a href="@Url.Action("DeleteCTPhieuDat", new { maPDP = item.maPDP, maP = item.maP})"
+                           class="text-danger" onclick="return confirm('Xóa phòng này khỏi phiếu đặt?')">
+                            <i class="fa fa-trash"></i>
+                        </a>
+</text>)
+)
+)
+            </div>
+        </div>
+
+        <div class="total-section">
+            <span class="info-label" style="font-size: 1.1rem;">TỔNG TIỀN CỌC:</span>
+            <span class="price-total">@Model.tongTienCoc.ToString("#,##0") VNĐ</span>
+        </div>
+    </div>
+</div>

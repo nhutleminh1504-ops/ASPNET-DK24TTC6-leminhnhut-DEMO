@@ -1,0 +1,119 @@
+﻿@model DoAnHMS.Models.Phong
+
+@{
+    ViewBag.Title = "Chỉnh sửa phòng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .edit-card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        padding: 30px;
+        margin-top: 20px;
+    }
+
+    .form-header {
+        border-bottom: 2px solid #f4f4f4;
+        margin-bottom: 25px;
+        padding-bottom: 10px;
+        color: #333;
+    }
+
+    .control-label {
+        font-weight: 600;
+        color: #555;
+    }
+
+    .radio-group {
+        display: flex;
+        gap: 20px;
+        padding-top: 7px;
+    }
+
+    .radio-item input[type="radio"] {
+        margin-right: 5px;
+        cursor: pointer;
+    }
+
+    .btn-custom {
+        padding: 10px 25px;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="edit-card">
+                <div class="form-header">
+                    <h3><i class="fa fa-edit"></i> CHỈNH SỬA THÔNG TIN PHÒNG</h3>
+                </div>
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.maP)
+
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.maP, "Mã phòng", htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                                    @Html.TextBoxFor(model => model.maP, new { @class = "form-control", @readonly = "readonly", style = "background-color: #eee;" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.maLP, "Loại phòng", htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-bed"></i></span>
+                                    @Html.DropDownList("maLP", null, htmlAttributes: new { @class = "form-control" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.maLP, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Tình trạng</label>
+                            <div class="col-md-9">
+                                <div class="radio-group">
+                                    <label class="radio-item text-success">
+                                        @Html.RadioButtonFor(model => model.tinhTrang, true)
+                                        <span class="label label-success">Trống</span>
+                                    </label>
+                                    <label class="radio-item text-danger">
+                                        @Html.RadioButtonFor(model => model.tinhTrang, false)
+                                        <span class="label label-danger">Đang sử dụng</span>
+                                    </label>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.tinhTrang, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button type="submit" class="btn btn-primary btn-custom">
+                                    <i class="fa fa-save"></i> Lưu thay đổi
+                                </button>
+                                <a href="@Url.Action("Index")" class="btn btn-default btn-custom">
+                                    <i class="fa fa-arrow-left"></i> Quay lại
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

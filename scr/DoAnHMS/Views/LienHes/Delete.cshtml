@@ -1,0 +1,191 @@
+﻿@model DoAnHMS.Models.LienHe
+
+@{
+    ViewBag.title = "Xác nhận gỡ bỏ yêu cầu";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    :root {
+        --luxury-gold: #c5a059;
+        --luxury-navy: #1a1d2e;
+        --luxury-danger: #8b0000; /* Màu đỏ rượu sang trọng */
+        --soft-gray: #f8f9fa;
+    }
+
+    .delete-container {
+        padding: 50px 0;
+        background-color: var(--soft-gray);
+        min-height: 80vh;
+    }
+
+    .delete-card {
+        background: #fff;
+        border: none;
+        border-radius: 0;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+        position: relative;
+        overflow: hidden;
+    }
+
+        /* Thanh cảnh báo màu đỏ rượu phía trên */
+        .delete-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--luxury-danger);
+        }
+
+    .card-header-warning {
+        padding: 50px 50px 20px;
+        text-align: center;
+    }
+
+        .card-header-warning i {
+            font-size: 3rem;
+            color: #f1f1f1;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .card-header-warning h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--luxury-danger);
+            letter-spacing: 2px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 1.3rem;
+        }
+
+    .card-body-luxury {
+        padding: 20px 60px 50px;
+    }
+
+    /* Định dạng dữ liệu */
+    .data-section {
+        border-top: 1px solid #f1f1f1;
+        border-bottom: 1px solid #f1f1f1;
+        padding: 30px 0;
+        margin-bottom: 40px;
+    }
+
+    .data-row {
+        margin-bottom: 20px;
+    }
+
+    .data-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: #bbb;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .data-value {
+        font-size: 1.1rem;
+        color: var(--luxury-navy);
+        font-weight: 500;
+        display: block;
+    }
+
+    /* Buttons */
+    .btn-luxury-confirm {
+        background: var(--luxury-danger);
+        color: #fff;
+        border-radius: 0;
+        padding: 15px 45px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border: none;
+        transition: all 0.4s;
+    }
+
+        .btn-luxury-confirm:hover {
+            background: #000;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+    .btn-back-link {
+        color: var(--luxury-navy);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.3s;
+        border-bottom: 1px solid transparent;
+    }
+
+        .btn-back-link:hover {
+            color: var(--luxury-gold);
+            border-bottom: 1px solid var(--luxury-gold);
+            text-decoration: none;
+        }
+</style>
+
+<div class="delete-container">
+    <div class="row justify-content-center">
+        <div class="col-xl-8 col-lg-10">
+            <div class="delete-card">
+
+                <div class="card-header-warning">
+                    <i class="fas fa-trash-restore-alt"></i>
+                    <p class="text-muted small text-uppercase mb-2" style="letter-spacing: 1px;">Yêu cầu này sẽ bị gỡ khỏi hệ thống</p>
+                    <h3>Bạn có chắc chắn muốn xóa?</h3>
+                </div>
+
+                <div class="card-body-luxury">
+                    <div class="data-section">
+                        <div class="row data-row">
+                            <div class="col-md-6">
+                                <span class="data-label">Danh tính người gửi</span>
+                                <span class="data-value">@Model.hoTen</span>
+                            </div>
+                            <div class="col-md-6 text-md-right">
+                                <span class="data-label">Ngày nhận yêu cầu</span>
+                                <span class="data-value">@Model.ngayGui.ToString("dd/MM/yyyy HH:mm")</span>
+                            </div>
+                        </div>
+
+                        <div class="row data-row">
+                            <div class="col-md-6">
+                                <span class="data-label">Số điện thoại / Email</span>
+                                <span class="data-value">@Model.sdt | @Model.email</span>
+                            </div>
+                            <div class="col-md-6 text-md-right">
+                                <span class="data-label">Trạng thái hiện tại</span>
+                                <span class="data-value">
+                                    @(Model.tinhTrang == true ? "Đã xử lý" : "Chưa xử lý")
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="d-flex justify-content-between align-items-center mt-5">
+                            <a href="@Url.Action("Index")" class="btn-back-link">
+                                <i class="fas fa-chevron-left mr-2"></i> Trở về danh sách
+                            </a>
+
+                            <button type="submit" class="btn btn-luxury-confirm shadow-sm">
+                                Xác nhận xóa vĩnh viễn <i class="fas fa-trash-alt ml-2"></i>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

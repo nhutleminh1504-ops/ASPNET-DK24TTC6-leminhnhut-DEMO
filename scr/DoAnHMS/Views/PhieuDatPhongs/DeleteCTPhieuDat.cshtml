@@ -1,0 +1,147 @@
+﻿@model DoAnHMS.Models.CTPhieuDatPhong
+@{
+    ViewBag.Title = "Phiếu đặt phòng - Xóa chi tiết";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    /* Card tổng thể */
+    .delete-card {
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        padding: 40px;
+        margin-top: 30px;
+        border-top: 6px solid #e74a3b;
+        transition: transform 0.3s ease;
+    }
+
+    /* Hộp cảnh báo nội dung */
+    .warning-box {
+        background-color: #fff5f5;
+        border-left: 5px solid #e74a3b;
+        padding: 20px;
+        margin-bottom: 30px;
+        color: #b91d1d;
+        border-radius: 4px;
+    }
+
+    /* Label và Value */
+    .info-label {
+        font-weight: 800;
+        color: #858796;
+        margin-bottom: 8px;
+        display: block;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+    }
+
+    .info-value {
+        font-size: 1.15rem;
+        color: #2e2f37;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 25px;
+    }
+
+    .price-value {
+        color: #e74a3b;
+        font-size: 1.3rem;
+    }
+
+    /* Button xác nhận xóa */
+    .btn-delete-confirm {
+        background: linear-gradient(135deg, #e74a3b 0%, #be2617 100%);
+        border: none;
+        color: white;
+        padding: 12px 35px;
+        font-weight: bold;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-delete-confirm:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(231, 74, 59, 0.4);
+        color: white;
+    }
+
+    /* Link quay lại */
+    .btn-back {
+        font-weight: 600;
+        color: #858796;
+        text-decoration: none;
+        padding: 12px 20px;
+        transition: color 0.2s;
+    }
+
+    .btn-back:hover {
+        color: #4e73df;
+        text-decoration: none;
+    }
+
+    /* Responsive cho mobile */
+    @@media (max-width: 768px) {
+        .delete-card { padding: 25px; }
+        .form-actions { flex-direction: column; align-items: stretch !important; }
+        .form-actions span { margin: 10px 0; text-align: center; }
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-xl-7 col-lg-9 col-md-11">
+            <div class="delete-card">
+                <h3 class="text-danger font-weight-bold mb-4 d-flex align-items-center">
+                    <i class="fas fa-exclamation-triangle mr-3"></i> XÁC NHẬN GỠ PHÒNG
+                </h3>
+
+                <div class="warning-box">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <strong>Lưu ý quan trọng:</strong> Khi bạn gỡ phòng <strong>@Model.maP</strong>, hệ thống sẽ tự động tính toán lại tổng tiền cọc của phiếu đặt <strong>@Model.maPDP</strong>.
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <span class="info-label">Mã phiếu đặt</span>
+                        <span class="info-value">#@Html.DisplayFor(model => model.maPDP)</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <span class="info-label">Mã phòng</span>
+                        <span class="info-value">
+                            <span class="badge badge-danger shadow-sm" style="padding: 8px 15px;">
+                                @Html.DisplayFor(model => model.maP)
+                            </span>
+                        </span>
+                    </div>
+                    <div class="col-sm-4">
+                        <span class="info-label">Tiền cọc hoàn trả</span>
+                        <span class="info-value price-value">@string.Format("{0:#,##0}", Model.tienCoc) VNĐ</span>
+                    </div>
+                </div>
+
+                <hr class="my-4" />
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.maPDP)
+                    @Html.HiddenFor(model => model.maP)
+
+                    <div class="form-actions d-flex align-items-center">
+                        <button type="submit" class="btn btn-delete-confirm shadow">
+                            <i class="fas fa-trash-alt mr-2"></i> XÁC NHẬN XÓA NGAY
+                        </button>
+
+                        <span class="mx-3 text-muted">hoặc</span>
+
+                        <a href="@Url.Action("Details", "PhieuDatPhongs", new { id = Model.maPDP })" class="btn-back">
+                            <i class="fas fa-undo mr-1"></i> Quay lại
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

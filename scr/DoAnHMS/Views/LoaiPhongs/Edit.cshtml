@@ -1,0 +1,161 @@
+﻿@model DoAnHMS.Models.LoaiPhong
+
+@{
+    ViewBag.Title = "Loại phòng - Sửa";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .edit-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        padding: 30px;
+        margin-top: 20px;
+        border-top: 5px solid #f0ad4e; /* Màu cam cho Edit */
+    }
+
+    .img-preview-container {
+        margin-top: 10px;
+        border: 2px dashed #ddd;
+        padding: 10px;
+        border-radius: 8px;
+        text-align: center;
+        background: #fafafa;
+    }
+
+    #previewImg {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 5px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .upload-btn-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        margin-top: 10px;
+    }
+
+        .upload-btn-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="edit-card">
+                <h3 class="text-warning" style="margin-top:0"><i class="fa fa-edit"></i> CHỈNH SỬA LOẠI PHÒNG</h3>
+                <hr />
+
+                @using (Html.BeginForm("Edit", "LoaiPhongs", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.maLP)
+
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">Mã loại phòng</label>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.maLP, new { @class = "form-control", @readonly = "readonly" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">Tên loại phòng</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.tenLP, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.tenLP, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">Sức chứa (người)</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.sucChua, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                                        @Html.ValidationMessageFor(model => model.sucChua, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">Đơn giá (VNĐ)</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.donGia, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                                        @Html.ValidationMessageFor(model => model.donGia, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-5">
+                                <label class="control-label">Hình ảnh đại diện</label>
+                                <div class="img-preview-container">
+                                    <img id="previewImg" src="@Url.Content("~/Images/" + Model.hinhAnh)" alt="Ảnh cũ" />
+                                    @Html.HiddenFor(model => model.hinhAnh, new { id = "hinhAnh" })
+                                </div>
+
+                                <div class="upload-btn-wrapper">
+                                    <button type="button" class="btn btn-info btn-sm"><i class="fa fa-upload"></i> Chọn ảnh mới</button>
+                                    <input type="file" name="Avatar" id="Avatar" accept="image/*" />
+                                </div>
+                                <p><small class="text-muted">Tên file: <span id="fileName">@Model.hinhAnh</span></small></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top:20px">
+                            <label class="control-label col-md-2">Mô tả</label>
+                            <div class="col-md-10">
+                                @Html.TextAreaFor(model => model.moTa, new { @class = "form-control", rows = "4" })
+                                @Html.ValidationMessageFor(model => model.moTa, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <hr />
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="submit" class="btn btn-warning" style="font-weight:bold; padding:10px 30px">
+                                    <i class="fa fa-save"></i> CẬP NHẬT
+                                </button>
+                                @Html.ActionLink("Hủy bỏ", "Index", null, new { @class = "btn btn-default", style = "padding:10px 20px" })
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#Avatar").change(function () {
+                // Hiển thị tên file
+                var fileName = $(this).val().split('\\').pop();
+                $("#hinhAnh").val(fileName);
+                $("#fileName").text(fileName);
+
+                // Preview ảnh
+                if (this.files && this.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#previewImg').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,163 @@
+﻿@model DoAnHMS.Models.PhieuDatPhong
+
+@{
+    ViewBag.Title = "Chỉnh sửa phiếu đặt phòng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .edit-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        padding: 30px;
+        margin-top: 20px;
+        border-top: 5px solid #4e73df;
+    }
+
+    .control-label {
+        font-weight: 600;
+        color: #555;
+    }
+
+    .input-group-text {
+        background-color: #f8f9fc;
+    }
+
+    input[readonly] {
+        background-color: #ffffff !important;
+        cursor: pointer;
+    }
+
+    .status-group {
+        padding: 8px 15px;
+        border: 1px solid #d1d3e2;
+        border-radius: 5px;
+        display: inline-block;
+        background: #f8f9fc;
+    }
+</style>
+
+<div class="container">
+    <div class="edit-card">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="text-primary m-0"><i class="fas fa-edit"></i> CHỈNH SỬA PHIẾU ĐẶT PHÒNG</h3>
+            <a href="@Url.Action("Index")" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Trở về
+            </a>
+        </div>
+        <hr />
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.maPDP)
+            @Html.HiddenFor(model => model.maNV) 
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.maPDP, "Mã phiếu đặt", htmlAttributes: new { @class = "control-label" })
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-key"></i></span></div>
+                                @Html.EditorFor(model => model.maPDP, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.maKH, "Khách hàng", htmlAttributes: new { @class = "control-label" })
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-user"></i></span></div>
+                                @Html.DropDownList("maKH", null, htmlAttributes: new { @class = "form-control" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.maKH, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ngayDen, "Ngày đến", htmlAttributes: new { @class = "control-label" })
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-calendar-alt"></i></span></div>
+                                @Html.TextBoxFor(model => model.ngayDen, "{0:MM/dd/yyyy}", new { @class = "datepicker form-control", @readonly = "readonly" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.ngayDen, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ngayDi, "Ngày đi", htmlAttributes: new { @class = "control-label" })
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-calendar-check"></i></span></div>
+                                @Html.TextBoxFor(model => model.ngayDi, "{0:MM/dd/yyyy}", new { @class = "datepicker form-control", @readonly = "readonly" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.ngayDi, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.tongTienCoc, "Tiền đặt cọc (VNĐ)", htmlAttributes: new { @class = "control-label" })
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span></div>
+                                @Html.EditorFor(model => model.tongTienCoc, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.tongTienCoc, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.soNguoi, "Số lượng khách", htmlAttributes: new { @class = "control-label" })
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-users"></i></span></div>
+                                @Html.EditorFor(model => model.soNguoi, new { htmlAttributes = new { @class = "form-control", @min = "1" } })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.soNguoi, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label d-block">Tình trạng phiếu</label>
+                            <div class="status-group">
+                                <label class="radio-inline text-danger mr-3" style="cursor:pointer">
+                                    @Html.RadioButtonFor(model => model.tinhTrang, "False") Chưa nhận phòng
+                                </label>
+                                <label class="radio-inline text-success" style="cursor:pointer">
+                                    @Html.RadioButtonFor(model => model.tinhTrang, "True") Đã nhận phòng
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.maNV, "Nhân viên lập phiếu", htmlAttributes: new { @class = "control-label" })
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-user-shield"></i></span></div>
+                                @Html.DropDownList("maNV", null, htmlAttributes: new { @class = "form-control", @disabled = "disabled" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary btn-lg px-5 shadow-sm">
+                        <i class="fas fa-save"></i> Lưu cập nhật
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.datepicker').datepicker({
+                dateFormat: "mm/dd/yy",
+                changeMonth: true,
+                changeYear: true,
+                minDate: 0 
+            });
+        });
+    </script>
+}

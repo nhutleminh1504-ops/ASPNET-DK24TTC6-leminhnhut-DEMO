@@ -1,0 +1,250 @@
+﻿@model DoAnHMS.Models.KhachHang
+
+@{
+    ViewBag.Title = "Hồ sơ khách hàng cao cấp";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+   
+    :root {
+        --primary-gold: #c5a059; 
+        --dark-navy: #1a1d2e;
+        --soft-gray: #f4f7f6;
+    }
+
+    .luxury-container {
+        padding: 40px;
+        background-color: var(--soft-gray);
+        min-height: 100vh;
+    }
+
+    .guest-profile-card {
+        background: #ffffff;
+        border: none;
+        border-radius: 0; 
+        box-shadow: 0 20px 60px rgba(0,0,0,0.05);
+        position: relative;
+        overflow: hidden;
+    }
+
+      
+        .guest-profile-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, #c5a059, #e9d1a1);
+        }
+
+   
+    .profile-header {
+        padding: 50px 40px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        align-items: center;
+        background: linear-gradient(to bottom right, #ffffff, #fafafa);
+    }
+
+    .avatar-wrapper {
+        position: relative;
+        margin-right: 35px;
+    }
+
+    .avatar-circle {
+        width: 110px;
+        height: 110px;
+        border: 2px solid var(--primary-gold);
+        padding: 5px;
+        border-radius: 50%;
+    }
+
+    .avatar-inner {
+        width: 100%;
+        height: 100%;
+        background: var(--dark-navy);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-gold);
+        font-size: 2.5rem;
+    }
+
+    .guest-title h2 {
+        font-family: 'Playfair Display', serif; 
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: var(--dark-navy);
+        margin-bottom: 5px;
+        text-transform: uppercase;
+    }
+
+    .vip-tag {
+        background: var(--primary-gold);
+        color: #fff;
+        font-size: 10px;
+        padding: 3px 12px;
+        border-radius: 50px;
+        letter-spacing: 2px;
+        font-weight: bold;
+    }
+
+  
+    .profile-body {
+        padding: 50px 60px;
+    }
+
+    .section-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--primary-gold);
+        letter-spacing: 2px;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+    }
+
+        .section-label::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #eee;
+            margin-left: 20px;
+        }
+
+    .data-group {
+        margin-bottom: 40px;
+    }
+
+    .data-label {
+        font-size: 12px;
+        color: #999;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .data-value {
+        font-size: 1.15rem;
+        color: var(--dark-navy);
+        font-weight: 500;
+        border-bottom: 1px solid #f9f9f9;
+        padding-bottom: 5px;
+        display: block;
+    }
+
+   
+    .profile-footer {
+        padding: 30px 60px;
+        background: #fcfcfc;
+        border-top: 1px solid #eee;
+    }
+
+    .btn-luxury {
+        padding: 12px 30px;
+        border-radius: 0;
+        font-size: 12px;
+        letter-spacing: 2px;
+        font-weight: 700;
+        text-transform: uppercase;
+        transition: all 0.4s;
+    }
+
+    .btn-luxury-edit {
+        background: var(--dark-navy);
+        color: #fff;
+        border: 1px solid var(--dark-navy);
+    }
+
+        .btn-luxury-edit:hover {
+            background: var(--primary-gold);
+            border-color: var(--primary-gold);
+            color: #fff;
+        }
+
+    .btn-luxury-back {
+        background: transparent;
+        color: #888;
+        border: 1px solid #eee;
+    }
+
+        .btn-luxury-back:hover {
+            border-color: #999;
+            color: #333;
+        }
+</style>
+
+<div class="luxury-container">
+    <div class="row justify-content-center">
+        <div class="col-xl-10">
+            <div class="guest-profile-card">
+
+                <div class="profile-header">
+                    <div class="avatar-wrapper">
+                        <div class="avatar-circle">
+                            <div class="avatar-inner">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="guest-title">
+                        <span class="vip-tag">VIP GUEST</span>
+                        <h2>@Model.tenKH</h2>
+                        <p class="text-muted mb-0"><i class="fas fa-fingerprint mr-2"></i> ID: @Model.maKH</p>
+                    </div>
+                </div>
+
+                <div class="profile-body">
+                    <div class="section-label">Thông tin định danh</div>
+                    <div class="row data-group">
+                        <div class="col-md-4">
+                            <span class="data-label">Giới tính</span>
+                            <span class="data-value">@(Model.gioiTinh == true ? "Nam" : "Nữ")</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="data-label">CMND / Passport</span>
+                            <span class="data-value">@Model.cmnd_passport</span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="data-label">Quốc tịch</span>
+                            <span class="data-value">@Model.quocTich</span>
+                        </div>
+                    </div>
+
+                    <div class="section-label">Thông tin liên lạc</div>
+                    <div class="row data-group">
+                        <div class="col-md-4">
+                            <span class="data-label">Số điện thoại</span>
+                            <span class="data-value">@Model.sdt</span>
+                        </div>
+                        <div class="col-md-8">
+                            <span class="data-label">Địa chỉ thư điện tử (Email)</span>
+                            <span class="data-value">@(Model.email ?? "Chưa cung cấp")</span>
+                        </div>
+                    </div>
+
+                    <div class="section-label">Địa chỉ thường trú</div>
+                    <div class="row data-group">
+                        <div class="col-12">
+                            <span class="data-label">Địa chỉ chi tiết</span>
+                            <span class="data-value">@Model.diaChi</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-footer d-flex justify-content-between">
+                    <a href="@Url.Action("Index")" class="btn btn-luxury btn-luxury-back">
+                        <i class="fas fa-chevron-left mr-2"></i> Quay lại
+                    </a>
+                    <a href="@Url.Action("Edit", new { id = Model.maKH })" class="btn btn-luxury btn-luxury-edit shadow-sm">
+                        Cập nhật hồ sơ <i class="fas fa-external-link-alt ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

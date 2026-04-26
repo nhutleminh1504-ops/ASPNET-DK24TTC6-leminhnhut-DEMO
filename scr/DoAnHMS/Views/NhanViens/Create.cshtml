@@ -1,0 +1,238 @@
+﻿@model DoAnHMS.Models.NhanVien
+
+@{
+    ViewBag.Title = "Ghi danh nhân sự mới";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    :root {
+        --luxury-gold: #c5a059;
+        --luxury-navy: #1a1d2e;
+        --luxury-bg: #f8f9fa;
+    }
+
+    .create-wrapper {
+        padding: 40px 0;
+        background-color: var(--luxury-bg);
+        min-height: 100vh;
+    }
+
+    .luxury-card {
+        background: #fff;
+        border: none;
+        border-radius: 0;
+        box-shadow: 0 15px 50px rgba(0,0,0,0.05);
+        position: relative;
+    }
+
+        .luxury-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--luxury-gold);
+        }
+
+    .card-header-luxury {
+        padding: 40px 40px 10px;
+        background: #fff;
+    }
+
+        .card-header-luxury h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--luxury-navy);
+            letter-spacing: 2px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+    /* Image Preview Section */
+    .avatar-preview-wrapper {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .avatar-circle {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 15px;
+        border-radius: 50%;
+        border: 2px dashed var(--luxury-gold);
+        padding: 5px;
+        background: #fff;
+        overflow: hidden;
+    }
+
+    #previewImg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        display: none; /* Ẩn khi chưa có ảnh */
+    }
+
+    .no-img-placeholder {
+        line-height: 110px;
+        color: #ccc;
+        font-size: 40px;
+    }
+
+    /* Form Fields */
+    .label-luxury {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--luxury-navy);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .form-control-luxury {
+        border-radius: 0;
+        border: 1px solid #e1e1e1;
+        padding: 12px 15px;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+
+        .form-control-luxury:focus {
+            border-color: var(--luxury-gold);
+            box-shadow: none;
+            background-color: #fff;
+        }
+
+    /* Custom File Input */
+    .custom-file-upload {
+        display: inline-block;
+        padding: 8px 20px;
+        cursor: pointer;
+        background: var(--luxury-navy);
+        color: white;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        transition: 0.3s;
+    }
+
+        .custom-file-upload:hover {
+            background: var(--luxury-gold);
+        }
+
+    /* Buttons */
+    .btn-create-luxury {
+        background: var(--luxury-navy);
+        color: #fff;
+        border-radius: 0;
+        padding: 15px 50px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border: none;
+        transition: 0.4s;
+    }
+
+        .btn-create-luxury:hover {
+            background: var(--luxury-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(197, 160, 89, 0.3);
+        }
+
+    #AvatarInput {
+        display: none;
+    }
+</style>
+
+<div class="create-wrapper">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="luxury-card">
+                    <div class="card-header-luxury">
+                        <h3>GHI DANH NHÂN SỰ MỚI</h3>
+                        <p class="text-muted small">Thiết lập hồ sơ định danh cho thành viên mới của hệ thống</p>
+                    </div>
+
+                    <div class="card-body p-5">
+                        @using (Html.BeginForm("Create", "NhanViens", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger small mb-4" })
+
+                            <div class="avatar-preview-wrapper">
+                                <div class="avatar-circle" id="imgBox">
+                                    <i class="fas fa-user-plus no-img-placeholder" id="placeholderIcon"></i>
+                                    <img id="previewImg" src="#" alt="Preview" />
+                                </div>
+                                <label for="AvatarInput" class="custom-file-upload">
+                                    <i class="fas fa-camera mr-2"></i> CHỌN ẢNH ĐẠI DIỆN
+                                </label>
+                                <input id="AvatarInput" type="file" name="Avatar" accept="image/*" required />
+                                @Html.ValidationMessageFor(model => model.hinhAnh, "", new { @class = "text-danger d-block small mt-2" })
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label class="label-luxury">Mã nhân viên (Hệ thống cấp)</label>
+                                    @Html.EditorFor(model => model.maNV, new { htmlAttributes = new { @class = "form-control form-control-luxury", @readonly = "readonly", @Value = ViewBag.MaNV } })
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <label class="label-luxury">Họ và tên nhân viên</label>
+                                    @Html.EditorFor(model => model.tenNV, new { htmlAttributes = new { @class = "form-control form-control-luxury", placeholder = "VD: Nguyễn Văn A" } })
+                                    @Html.ValidationMessageFor(model => model.tenNV, "", new { @class = "text-danger small" })
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <label class="label-luxury">Giới tính</label>
+                                    <div class="pt-2">
+                                        <label class="mr-4" style="cursor:pointer">
+                                            @Html.RadioButtonFor(model => model.gioiTinh, "True", new { @checked = "checked" }) <span class="ml-1">Nam</span>
+                                        </label>
+                                        <label style="cursor:pointer">
+                                            @Html.RadioButtonFor(model => model.gioiTinh, "False") <span class="ml-1">Nữ</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <label class="label-luxury">Ngày sinh</label>
+                                    @Html.EditorFor(model => model.ngaySinh, new { htmlAttributes = new { @class = "form-control form-control-luxury", type = "date" } })
+                                    @Html.ValidationMessageFor(model => model.ngaySinh, "", new { @class = "text-danger small" })
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <label class="label-luxury">Số điện thoại liên lạc</label>
+                                    @Html.EditorFor(model => model.sdt, new { htmlAttributes = new { @class = "form-control form-control-luxury", placeholder = "09xxxxxxxx" } })
+                                    @Html.ValidationMessageFor(model => model.sdt, "", new { @class = "text-danger small" })
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <label class="label-luxury">Địa chỉ Email</label>
+                                    @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control form-control-luxury", placeholder = "nhanvien@luxuryhotel.com" } })
+                                    @Html.ValidationMessageFor(model => model.email, "", new { @class = "text-danger small" })
+                                </div>
+
+                                <div class="col-md-12 mb-5">
+                                    <label class="label-luxury">Địa chỉ thường trú</label>
+                                    @Html.EditorFor(model => model.diaChi, new { htmlAttributes = new { @class = "form-control form-control-luxury", placeholder = "Số nhà, tên đường, khu vực..." } })
+                                    @Html.ValidationMessageFor(model => model.diaChi, "", new { @class = "text-danger small" })
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center border-top pt-4">
+                                <a href="@Url.Action("Index")" class="text-muted small font-weight-bold" style="letter-spacing:1px; text-decoration:none">
+                                    <i class="fas fa-arrow-left mr-2"></i> QUAY LẠI DANH SÁCH
+                                </a>
+                                <button type="submit" class="btn btn-create-luxury shadow">
+                                    XÁC NHẬN THÊM MỚI <i class="fas fa-check-circle ml-2"></i>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>

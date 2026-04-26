@@ -1,0 +1,208 @@
+﻿@{
+    ViewBag.Title = "Bảng điều khiển hệ thống";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+
+    body {
+        background-color: #f8f9fc;
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    .dashboard-container {
+        padding: 20px;
+    }
+
+    
+    .section-divider {
+        display: flex;
+        align-items: center;
+        margin: 2.5rem 0 1.5rem;
+    }
+
+        .section-divider p {
+            margin-bottom: 0;
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: #4e73df;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .section-divider::after {
+            content: "";
+            flex: 1;
+            margin-left: 1.5rem;
+            height: 1px;
+            background: linear-gradient(to right, #e3e6f0, rgba(227, 230, 240, 0));
+        }
+
+    
+    a.card-link {
+        text-decoration: none !important;
+        display: block;
+    }
+
+    .custom-card {
+        border: none !important;
+        border-radius: 16px !important;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        position: relative;
+        background: #fff;
+        overflow: visible; 
+    }
+
+        .custom-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .custom-card:active {
+            transform: scale(0.97);
+        }
+
+    
+    .badge-notify {
+        position: absolute;
+        top: -10px;
+        right: -8px;
+        background: linear-gradient(135deg, #ff5252 0%, #f44336 100%);
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 700;
+        min-width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #fff;
+        box-shadow: 0 4px 10px rgba(244, 67, 54, 0.4);
+        z-index: 10;
+        padding: 2px;
+    }
+
+    /* 5. Icon và Màu sắc */
+    .icon-box i {
+        transition: all 0.3s ease;
+        opacity: 0.4;
+    }
+
+    .custom-card:hover .icon-box i {
+        transform: scale(1.2) rotate(10deg);
+        opacity: 0.9;
+    }
+
+   
+    .bl-primary {
+        border-left: 5px solid #4e73df !important;
+    }
+
+    .bl-success {
+        border-left: 5px solid #1cc88a !important;
+    }
+
+    .bl-info {
+        border-left: 5px solid #36b9cc !important;
+    }
+
+    .bl-warning {
+        border-left: 5px solid #f6c23e !important;
+    }
+
+    .bl-danger {
+        border-left: 5px solid #e74a3b !important;
+    }
+
+    .bl-secondary {
+        border-left: 5px solid #858796 !important;
+    }
+
+    .bl-dark {
+        border-left: 5px solid #5a5c69 !important;
+    }
+</style>
+
+<div class="dashboard-container">
+
+    @* --- KHÁCH SẠN --- *@
+    <div class="section-divider">
+        <p>Hệ thống Khách Sạn</p>
+    </div>
+    <div class="row">
+        @RenderMenuCard("Phongs", "PHÒNG", "fa-building", "primary")
+        @RenderMenuCard("LoaiPhongs", "LOẠI PHÒNG", "fa-bars", "success")
+        @RenderMenuCard("DichVus", "DỊCH VỤ", "fa-star", "info")
+    </div>
+
+    @* --- VẬN HÀNH --- *@
+    <div class="section-divider">
+        <p>Đặt & Thuê Phòng</p>
+    </div>
+    <div class="row">
+        @RenderMenuCard("PhieuDatPhongs", "PHIẾU ĐẶT", "fa-flag", "secondary", ViewBag.PDP)
+        @RenderMenuCard("PhieuThuePhongs", "PHIẾU THUÊ", "fa-sticky-note", "danger")
+        @RenderMenuCard("KiemTraPhongTrong", "KIỂM TRA TRỐNG", "fa-calendar-check", "dark")
+        @RenderMenuCard("HoaDons", "HÓA ĐƠN", "fa-receipt", "warning")
+    </div>
+
+    @* --- KHÁCH HÀNG --- *@
+    <div class="section-divider">
+        <p>Khách Hàng & Phản Hồi</p>
+    </div>
+    <div class="row">
+        @RenderMenuCard("KhachHangs", "KHÁCH HÀNG", "fa-address-book", "primary")
+        @RenderMenuCard("LienHes", "LIÊN HỆ", "fa-phone-square", "success", ViewBag.LienHe)
+        @RenderMenuCard("PhanHois", "PHẢN HỒI", "fa-comments", "info", ViewBag.PhanHoi)
+    </div>
+
+    @* --- HỆ THỐNG --- *@
+    <div class="section-divider">
+        <p>Quản trị Hệ Thống</p>
+    </div>
+    <div class="row">
+        @RenderMenuCard("NhanViens", "NHÂN VIÊN", "fa-users", "secondary")
+        @RenderMenuCard("QuanTris", "TÀI KHOẢN", "fa-user-circle", "danger")
+        @RenderMenuCard("NhomNhanViens", "NHÓM QUYỀN", "fa-users-cog", "dark")
+        @RenderMenuCard("DanhSachQuyens", "PHÂN QUYỀN", "fa-key", "warning")
+    </div>
+</div>
+
+
+@helper RenderMenuCard(string controller, string title, string icon, string color, dynamic count = null)
+{
+  
+    bool hasCount = false;
+    int displayCount = 0;
+
+    if (count != null)
+    {
+        
+        int.TryParse(count.ToString(), out displayCount);
+        if (displayCount > 0) { hasCount = true; }
+    }
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a href="@Url.Action("Index", controller)" class="card-link h-100">
+            <div class="card shadow-sm h-100 py-2 custom-card bl-@color">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-@color text-uppercase mb-1">Quản lý</div>
+                            <div class="h6 mb-0 font-weight-bold text-gray-800">@title</div>
+                        </div>
+                        <div class="col-auto icon-box">
+                            <i class="fas @icon fa-2x text-@color"></i>
+                        </div>
+                    </div>
+                </div>
+
+                @if (hasCount)
+                {
+                    <div class="badge-notify">@displayCount</div>
+                }
+            </div>
+        </a>
+    </div>
+}

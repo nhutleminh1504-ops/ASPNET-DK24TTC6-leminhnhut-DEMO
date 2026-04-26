@@ -1,0 +1,121 @@
+﻿@model DoAnHMS.Models.LoaiPhong
+
+@{
+    ViewBag.Title = "Loại phòng - Xóa";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .delete-container {
+        margin-top: 30px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        padding: 0; /* Để header sát mép */
+        overflow: hidden;
+        border: 1px solid #ebccd1;
+    }
+
+    .delete-header {
+        background-color: #d9534f;
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .delete-body {
+        padding: 30px;
+    }
+
+    .img-delete-preview {
+        width: 100%;
+        max-height: 300px;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .info-confirm-list {
+        font-size: 16px;
+        line-height: 2.5;
+    }
+
+    .info-confirm-label {
+        font-weight: bold;
+        color: #777;
+        width: 150px;
+        display: inline-block;
+    }
+
+    .warning-text {
+        color: #a94442;
+        background-color: #f2dede;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 20px;
+        border-left: 5px solid #d9534f;
+    }
+
+    .btn-confirm-delete {
+        background-color: #d9534f;
+        border-color: #d43f3a;
+        color: white;
+        padding: 10px 35px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+        .btn-confirm-delete:hover {
+            background-color: #c9302c;
+            color: white;
+        }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="delete-container">
+                <div class="delete-header">
+                    <h2 style="margin:0;"><i class="fa fa-exclamation-circle"></i> XÁC NHẬN XÓA LOẠI PHÒNG</h2>
+                </div>
+
+                <div class="delete-body">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <img src="@Url.Content("~/Images/" + Model.hinhAnh)" class="img-delete-preview" alt="Hình ảnh" />
+                        </div>
+
+                        <div class="col-md-7">
+                            <div class="info-confirm-list">
+                                <div><span class="info-confirm-label">Mã loại:</span> <b>@Model.maLP</b></div>
+                                <div><span class="info-confirm-label">Tên loại:</span> <b>@Model.tenLP</b></div>
+                                <div><span class="info-confirm-label">Đơn giá:</span> <span class="text-danger"><b>@string.Format("{0:0,0}", Model.donGia) VNĐ</b></span></div>
+                                <div><span class="info-confirm-label">Sức chứa:</span> <b>@Model.sucChua người</b></div>
+                            </div>
+
+                            <div class="warning-text">
+                                <i class="fa fa-warning"></i> <b>Cảnh báo:</b> Nếu bạn xóa loại phòng này, các phòng thuộc loại này có thể bị ảnh hưởng. Bạn có chắc chắn muốn tiếp tục?
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+                    <div class="text-right">
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.maLP)
+
+                            <button type="submit" class="btn btn-confirm-delete">
+                                <i class="fa fa-trash"></i> Đồng ý Xóa
+                            </button>
+                            <a href="@Url.Action("Index")" class="btn btn-default" style="padding: 10px 25px; margin-left: 10px;">
+                                <i class="fa fa-reply"></i> Hủy bỏ & Quay lại
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

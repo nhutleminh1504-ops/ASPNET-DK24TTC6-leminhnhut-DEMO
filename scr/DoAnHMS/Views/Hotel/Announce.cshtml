@@ -1,0 +1,163 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <title>Thông Báo Thành Công | HOANG GIA HOTEL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <link href="~/Assets/Client/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="~/Assets/Client/css/font-awesome.css" rel="stylesheet">
+    <link href="~/Assets/Client/css/style.css" rel="stylesheet" type="text/css" />
+
+    <link href="//fonts.googleapis.com/css?family=Oswald:300,400,700" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
+
+    <style>
+        body {
+            background: #2c3e50; /* Màu nền tối sang trọng */
+            font-family: 'Lato', sans-serif;
+        }
+
+        .w3_navigation {
+            background: #1a252f;
+            padding: 10px 0;
+            margin-bottom: 30px;
+        }
+
+        .navbar-brand {
+            font-size: 30px;
+            color: #fff !important;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+            .navbar-brand span {
+                color: #ff9800;
+            }
+
+        .success-container {
+            background: rgba(44, 62, 80, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            text-align: center;
+            margin-bottom: 50px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .icon-check {
+            font-size: 70px;
+            color: #2ecc71;
+            margin-bottom: 20px;
+        }
+
+        .success-title {
+            color: #fff;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .success-desc {
+            color: #bdc3c7;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        /* Style cho khối chứa ảnh */
+        .img-box {
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px; /* Khoảng cách giữa 2 ảnh */
+        }
+
+        .img-item {
+            max-width: 450px;
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: 0.3s;
+        }
+
+            .img-item:hover {
+                transform: scale(1.02);
+            }
+        /* Nút bấm */
+        .btn-back-home {
+            background: #ff9800;
+            color: #fff !important;
+            padding: 15px 35px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            display: inline-block;
+            text-decoration: none !important;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+            .btn-back-home:hover {
+                background: #e68a00;
+                box-shadow: 0 8px 20px rgba(255, 152, 0, 0.4);
+                transform: translateY(-3px);
+            }
+
+        .copy-right {
+            text-align: center;
+            color: #7f8c8d;
+            padding: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="w3_navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <h1><a class="navbar-brand" href="@Url.Action("Index", "Hotel")">HOANG <span>GIA</span></a></h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="success-container">
+                    <i class="fa fa-check-circle icon-check"></i>
+                    <h2 class="success-title">Gửi Thành Công!</h2>
+
+                    <p class="success-desc">
+                        Cảm ơn bạn đã tin tưởng HOÀNG GIA HOTEL.<br>
+                        Yêu cầu của bạn đã được tiếp nhận, chúng tôi sẽ sớm liên hệ lại để tư vấn chi tiết.
+                    </p>
+
+                    <div class="img-box">
+                        <img src="~/Assets/Client/images/plzwait.png" alt="Đăng ký thành công" class="img-item" />
+
+                        <img src="~/Assets/Client/images/contact.jpg" alt="Thông tin liên hệ" class="img-item" />
+                    </div>
+
+                    <a href="@Url.Action("Index", "Hotel")" class="btn-back-home">
+                        <i class="fa fa-home"></i> TRỞ VỀ TRANG CHỦ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="copy-right">
+        <p>© @DateTime.Now.Year HOANG GIA HOTEL. Thiết kế bởi <strong>LE MINH NHUT</strong></p>
+    </div>
+
+    <script src="~/Assets/Client/js/jquery-2.1.4.min.js"></script>
+    <script src="~/Assets/Client/js/bootstrap-3.1.1.min.js"></script>
+</body>
+</html>

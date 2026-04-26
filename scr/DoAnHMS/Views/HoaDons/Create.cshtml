@@ -1,0 +1,146 @@
+﻿@model DoAnHMS.Models.HoaDon
+
+@{
+    ViewBag.Title = "Lập hóa đơn thanh toán";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .invoice-create-card {
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        padding: 35px;
+        margin-top: 25px;
+        border-top: 6px solid #4e73df;
+    }
+
+    .form-header {
+        margin-bottom: 25px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+    }
+
+    .control-label {
+        font-weight: 700;
+        color: #4e73df;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        margin-bottom: 8px;
+    }
+
+    .input-group-text {
+        background-color: #f8f9fc;
+        color: #4e73df;
+    }
+
+    .form-control:focus {
+        border-color: #4e73df;
+        box-shadow: none;
+    }
+
+    .btn-create {
+        background: linear-gradient(135deg, #4e73df 0%, #2e59d9 100%);
+        border: none;
+        color: white;
+        padding: 12px 30px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+        .btn-create:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 115, 223, 0.4);
+            color: white;
+        }
+</style>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="invoice-create-card">
+                <div class="form-header d-flex justify-content-between align-items-center">
+                    <h3 class="text-primary m-0 font-weight-bold">
+                        <i class="fas fa-file-invoice-dollar"></i> LẬP HÓA ĐƠN MỚI
+                    </h3>
+                    <a href="@Url.Action("Index")" class="btn btn-light btn-sm text-secondary">
+                        <i class="fas fa-arrow-left"></i> Trở về
+                    </a>
+                </div>
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="row">
+                            <div class="form-group col-md-6 mb-4">
+                                @Html.LabelFor(model => model.maHD, "Mã số hóa đơn", htmlAttributes: new { @class = "control-label" })
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
+                                    </div>
+                                    @Html.EditorFor(model => model.maHD, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @Value = ViewBag.maHD } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.maHD, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group col-md-6 mb-4">
+                                @Html.LabelFor(model => model.ngayTT, "Ngày giờ thanh toán", htmlAttributes: new { @class = "control-label" })
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                    </div>
+                                    @* Tự động lấy thời gian hiện tại cho input datetime-local *@
+                                    <input type="datetime-local" id="ngayTT" name="ngayTT" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                                </div>
+                                @Html.ValidationMessageFor(model => model.ngayTT, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-6 mb-4">
+                                @Html.LabelFor(model => model.maPTP, "Chọn phiếu thuê thanh toán", htmlAttributes: new { @class = "control-label" })
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                    </div>
+                                    @Html.DropDownList("maPTP", null, "-- Chọn mã phiếu thuê --", htmlAttributes: new { @class = "form-control" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.maPTP, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group col-md-6 mb-4">
+                                @Html.LabelFor(model => model.maNV, "Nhân viên thu ngân", htmlAttributes: new { @class = "control-label" })
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-user-shield"></i></span>
+                                    </div>
+                                    @Html.DropDownList("maNV", null, htmlAttributes: new { @class = "form-control", @disabled = "disabled" })
+                                    @* Cần HiddenFor vì disabled sẽ không submit giá trị *@
+                                    @Html.HiddenFor(model => model.maNV)
+                                </div>
+                                @Html.ValidationMessageFor(model => model.maNV, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info small">
+                            <i class="fas fa-info-circle"></i>
+                            Hệ thống sẽ tự động tính toán <b>Tổng tiền</b> dựa trên số ngày ở thực tế và các dịch vụ đi kèm khi bạn nhấn Lưu.
+                        </div>
+
+                        <hr />
+
+                        <div class="form-group text-right">
+                            <button type="submit" class="btn btn-create shadow">
+                                <i class="fas fa-check-circle"></i> HOÀN TẤT & LƯU HÓA ĐƠN
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

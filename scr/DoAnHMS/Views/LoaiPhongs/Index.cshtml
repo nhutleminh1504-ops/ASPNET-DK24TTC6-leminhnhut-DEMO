@@ -1,0 +1,116 @@
+﻿@model IEnumerable<DoAnHMS.Models.LoaiPhong>
+
+@{
+    ViewBag.Title = "Danh sách loại phòng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var grid = new WebGrid(Model, canPage: true, defaultSort: "sucChua", rowsPerPage: 5);
+}
+
+<style type="text/css">
+    /* Thừa kế phong cách từ trang Phòng nhưng tối ưu cho Loại phòng */
+    .grid-footer {
+        color: #000;
+        text-align: center;
+        font-weight: bold;
+        padding: 15px;
+    }
+
+        .grid-footer a {
+            background-color: #ffffff;
+            color: #2980b9;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 5px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 0 2px;
+        }
+
+            .grid-footer a:hover {
+                background-color: #2980b9;
+                color: white;
+            }
+
+    .alternatingRowStyle {
+        background-color: #f9fbfd;
+    }
+
+    .img-preview {
+        width: 100px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+    }
+
+    .price-text {
+        color: #d9534f;
+        font-weight: bold;
+    }
+
+    .desc-truncate {
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row" style="margin-bottom: 20px; display: flex; align-items: center;">
+        <div class="col-md-6">
+            <h3 class="text-primary" style="margin: 0;"><i class="fa fa-list"></i> DANH SÁCH LOẠI PHÒNG</h3>
+        </div>
+        <div class="col-md-6 text-right">
+            @Html.ActionLink(" Thêm mới loại phòng", "Create", null, new { @class = "btn btn-success fa fa-plus" })
+            <a href="@Url.Action("Index", "Phongs")" class="btn btn-info"><i class="fa fa-bed"></i> Quản lý Phòng</a>
+        </div>
+    </div>
+
+    @if (ViewBag.TB != null)
+    {
+        <div class="alert alert-info">@ViewBag.TB</div>
+    }
+
+    <div id="gridContent" class="table-responsive" style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+        @grid.GetHtml(
+            tableStyle: "table table-bordered table-hover",
+            footerStyle: "grid-footer",
+            fillEmptyRows: false,
+            mode: WebGridPagerModes.All,
+            alternatingRowStyle: "alternatingRowStyle",
+            columns: grid.Columns(
+                // 1. Số thứ tự
+                grid.Column("STT", format: item => item.WebGrid.Rows.IndexOf(item) + 1 + (grid.PageIndex * grid.RowsPerPage)),
+
+                // 2. Mã loại phòng
+                grid.Column("maLP", "Mã loại"),
+
+                // 3. Tên loại phòng
+                grid.Column("tenLP", "Tên Loại", style: "font-weight:bold;"),
+
+                // 4. Hình ảnh (Hiển thị ảnh thật)
+                grid.Column("hinhAnh", "Hình Ảnh", format: @<text>
+                        <img src="@Url.Content("~/Images/" + item.hinhAnh)" class="img-preview" />
+                </text>),
+
+         // 5. Đơn giá (Định dạng VNĐ)
+         grid.Column("donGia", "Đơn giá", format: @<text><span class="price-text">@item.donGia.ToString("#,##0") VNĐ</span></text>),
+
+// 6. Sức chứa
+grid.Column("sucChua", "Sức chứa", format: @<text>@item.sucChua người</text>),
+
+// 7. Mô tả (Cắt bớt nếu quá dài)
+grid.Column("moTa", "Mô tả", format: @<text><div class="desc-truncate" title="@item.moTa">@item.moTa</div></text>),
+
+// 8. Chức năng
+grid.Column("Chức năng", format: @<text>
+    <div style="display:flex; gap: 5px; justify-content:center;">
+        <a href="@Url.Action("Edit", new { id = item.maLP })"><img src="/images/edit.png" width="20" title="Cập nhật" /></a>
+        <a href="@Url.Action("Details", new { id = item.maLP })"><img src="/images/details.png" width="20" title="Chi tiết" /></a>
+        <a href="@Url.Action("Delete", new { id = item.maLP })"><img src="/images/delete.png" width="20" title="Xóa" /></a>
+    </div>
+</text>)
+)
+)
+    </div>
+</div>

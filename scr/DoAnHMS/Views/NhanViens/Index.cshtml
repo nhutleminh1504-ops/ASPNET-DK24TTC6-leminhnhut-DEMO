@@ -1,0 +1,108 @@
+﻿@model IEnumerable<DoAnHMS.Models.NhanVien>
+
+@{
+    ViewBag.Title = "Danh sách nhân viên";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var grid = new WebGrid(Model, canPage: true, defaultSort: "tenNV", rowsPerPage: 10);
+}
+
+<style type="text/css">
+    .dashboard-card {
+        background: #fff;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        border-top: 4px solid #c5a059;
+    }
+
+    .table-luxury {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .table-luxury th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-transform: uppercase;
+            font-size: 11px;
+            color: #1a1d2e;
+            border-bottom: 2px solid #eee;
+        }
+
+        .table-luxury td {
+            padding: 12px;
+            border-bottom: 1px solid #f1f1f1;
+            vertical-align: middle;
+        }
+
+    .grid-footer {
+        text-align: center;
+        padding: 20px;
+    }
+
+        .grid-footer a {
+            background: #fff;
+            color: #c5a059;
+            border: 1px solid #eee;
+            padding: 5px 12px;
+            margin: 0 2px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+            .grid-footer a:hover {
+                background: #c5a059;
+                color: #fff;
+            }
+</style>
+
+<div class="dashboard-card">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 style="font-weight:700; color:#1a1d2e;">QUẢN LÝ ĐỘI NGŨ NHÂN VIÊN</h3>
+        <div>
+            <a href="@Url.Action("Create")" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Thêm mới</a>
+            <a href="@Url.Action("Search")" class="btn btn-outline-secondary btn-sm"><i class="fa fa-search"></i> Tìm kiếm</a>
+        </div>
+    </div>
+
+    <div id="gridContent">
+        @grid.GetHtml(
+            tableStyle: "table-luxury",
+            footerStyle: "grid-footer",
+            mode: WebGridPagerModes.All,
+            columns: grid.Columns(
+                grid.Column("STT", format: item => item.WebGrid.Rows.IndexOf(item) + 1 + (grid.PageIndex * grid.RowsPerPage)),
+
+                // HIỂN THỊ HÌNH ẢNH (Quan trọng nhất)
+                grid.Column("hinhAnh", "Định danh", format: @<text>
+                        <div style="display: flex; align-items: center;">
+                            <img src="@Url.Content("~/Images/" + item.hinhAnh)"
+                                 style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-right: 10px;"
+                                 onerror="this.src='@Url.Content("~/Images/avatar.jpg")'" />
+                            <div>
+                                <div style="font-weight:bold; color:#1a1d2e;">@item.tenNV</div>
+                                <small style="color:#999;">#@item.maNV</small>
+                            </div>
+                        </div>
+                </text>),
+
+         grid.Column("gioiTinh", "Giới tính", format: item => item.gioiTinh == true ? "Nam" : "Nữ"),
+         grid.Column("ngaySinh", "Ngày sinh", format: @<text>@item.ngaySinh.ToString("dd/MM/yyyy")</text>),
+grid.Column("Thông tin liên hệ", format: @<text>
+        <div style="font-size:12px;">
+            <div><i class="fa fa-phone"></i> @item.sdt</div>
+            <div style="color:#666;"><i class="fa fa-envelope"></i> @item.email</div>
+        </div>
+</text>),
+grid.Column("diaChi", "Địa chỉ"),
+grid.Column("Thao tác", format: @<text>
+    <div style="display: flex; gap: 8px;">
+        <a href="@Url.Action("Edit", new { id = item.maNV })"><img src="/images/edit.png" width="18" /></a>
+        <a href="@Url.Action("Details", new { id = item.maNV })"><img src="/images/details.png" width="18" /></a>
+        <a href="@Url.Action("Delete", new { id = item.maNV })"><img src="/images/delete.png" width="18" /></a>
+    </div>
+</text>)
+)
+)
+    </div>
+</div>

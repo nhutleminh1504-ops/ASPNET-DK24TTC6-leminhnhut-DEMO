@@ -1,0 +1,140 @@
+﻿@model IEnumerable<DoAnHMS.Models.NhomNhanVien>
+
+@{
+    ViewBag.Title = "Phân quyền hệ thống - Danh sách";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var grid = new WebGrid(Model, canPage: true, rowsPerPage: 10);
+}
+
+<style type="text/css">
+    :root {
+        --luxury-gold: #c5a059;
+        --luxury-navy: #1a1d2e;
+    }
+
+    .dashboard-card {
+        background: #fff;
+        border: none;
+        border-radius: 0;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+        padding: 30px;
+        margin-top: 20px;
+        position: relative;
+    }
+
+        /* Đường kẻ vàng đặc trưng HMS Luxury */
+        .dashboard-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--luxury-gold);
+        }
+
+    /* Style bảng tối giản hiện đại */
+    .table-luxury {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .table-luxury th {
+            background-color: #fcfcfc !important;
+            color: var(--luxury-navy) !important;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            padding: 15px !important;
+            border-bottom: 2px solid #eee !important;
+        }
+
+        .table-luxury td {
+            padding: 18px 15px !important;
+            vertical-align: middle !important;
+            font-size: 14px;
+            color: #444;
+            border-bottom: 1px solid #f8f9fa !important;
+        }
+
+        .table-luxury tr:hover td {
+            background-color: #fffaf0; /* Màu vàng kem cực nhạt khi hover */
+        }
+
+    /* Badge cho ID nhóm */
+    .id-badge {
+        font-weight: 700;
+        color: var(--luxury-gold);
+        background: #fdf8ef;
+        padding: 4px 12px;
+        border-radius: 4px;
+        border: 1px solid #f9ebcf;
+    }
+
+    /* Pagination */
+    .grid-footer {
+        text-align: center;
+        padding-top: 30px;
+    }
+
+        .grid-footer a {
+            color: var(--luxury-navy);
+            padding: 8px 14px;
+            text-decoration: none;
+            border: 1px solid #eee;
+            margin: 0 3px;
+            font-size: 12px;
+            transition: 0.3s;
+        }
+
+            .grid-footer a:hover {
+                background: var(--luxury-gold);
+                color: #fff;
+                border-color: var(--luxury-gold);
+            }
+</style>
+
+<div class="container-fluid">
+    <div class="dashboard-card">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 style="font-family: 'Playfair Display', serif; color: var(--luxury-navy); letter-spacing: 1px; font-weight: 700;">DANH MỤC NHÓM NHÂN VIÊN</h3>
+                <p class="text-muted small m-0">Quản lý cấu trúc phân quyền và chức năng hệ thống</p>
+            </div>
+            <a href="@Url.Action("Create")" class="btn shadow-sm" style="background: var(--luxury-navy); color: white; border-radius: 0; font-size: 11px; letter-spacing: 1px; padding: 10px 20px; font-weight: 700;">
+                <i class="fas fa-plus-circle mr-2"></i> THÊM NHÓM MỚI
+            </a>
+        </div>
+
+        <div id="gridContent" class="table-responsive">
+            @grid.GetHtml(
+                tableStyle: "table table-luxury",
+                footerStyle: "grid-footer",
+                mode: WebGridPagerModes.All,
+                columns: grid.Columns(
+                    grid.Column("STT", format: item => item.WebGrid.Rows.IndexOf(item) + 1 + (grid.PageIndex * grid.RowsPerPage), style: "text-center"),
+
+                    grid.Column("IDNhom", "Mã phân quyền", format: @<text><span class="id-badge">#@item.IDNhom</span></text>, style: "width: 200px;"),
+
+grid.Column("TenNhom", "Tên nhóm nhân viên", format: @<text><b style="color: var(--luxury-navy)">@item.TenNhom</b></text>),
+
+grid.Column("Thao tác", format: @<text>
+    <div class="d-flex justify-content-center">
+        <a href="@Url.Action("Delete", new { id = item.IDNhom })"
+           class="btn-action"
+           style="color: #ccc; transition: 0.3s;"
+           onmouseover="this.style.color='#d9534f'"
+           onmouseout="this.style.color='#ccc'"
+           title="Gỡ bỏ nhóm">
+            <i class="fas fa-trash-alt" style="font-size: 16px;"></i>
+        </a>
+    </div>
+</text>, style: "text-center; width: 150px;")
+)
+)
+        </div>
+    </div>
+</div>

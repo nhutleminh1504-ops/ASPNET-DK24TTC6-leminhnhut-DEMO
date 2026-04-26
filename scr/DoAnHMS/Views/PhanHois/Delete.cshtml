@@ -1,0 +1,203 @@
+﻿@model DoAnHMS.Models.PhanHoi
+
+@{
+    ViewBag.Title = "Gỡ bỏ ý kiến khách hàng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    :root {
+        --luxury-gold: #c5a059;
+        --luxury-navy: #1a1d2e;
+        --luxury-danger: #8b0000; /* Đỏ rượu chát sang trọng */
+        --luxury-bg: #f8f9fa;
+    }
+
+    .delete-wrapper {
+        padding: 50px 0;
+        background-color: var(--luxury-bg);
+        min-height: 90vh;
+    }
+
+    .delete-card {
+        background: #fff;
+        border: none;
+        border-radius: 0;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+        position: relative;
+        overflow: hidden;
+    }
+
+        /* Đường kẻ cảnh báo phía trên */
+        .delete-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--luxury-danger);
+        }
+
+    .card-header-warning {
+        padding: 50px 40px 10px;
+        text-align: center;
+    }
+
+        .card-header-warning i {
+            font-size: 3rem;
+            color: #f1f1f1;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .card-header-warning h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--luxury-danger);
+            letter-spacing: 2px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 1.4rem;
+        }
+
+    .card-body-luxury {
+        padding: 30px 60px 50px;
+    }
+
+    /* Layout thông tin tóm tắt */
+    .summary-box {
+        border-top: 1px solid #f1f1f1;
+        border-bottom: 1px solid #f1f1f1;
+        padding: 30px 0;
+        margin-bottom: 40px;
+    }
+
+    .label-luxury {
+        font-size: 11px;
+        font-weight: 700;
+        color: #bbb;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .value-luxury {
+        font-size: 1.1rem;
+        color: var(--luxury-navy);
+        font-weight: 500;
+        display: block;
+        margin-bottom: 20px;
+    }
+
+    .feedback-preview {
+        background: #fdfdfd;
+        border-left: 3px solid #eee;
+        padding: 20px;
+        font-style: italic;
+        color: #777;
+        margin-top: 10px;
+    }
+
+    /* Buttons */
+    .btn-luxury-delete {
+        background: var(--luxury-danger);
+        color: #fff;
+        border-radius: 0;
+        padding: 15px 45px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border: none;
+        transition: all 0.4s;
+    }
+
+        .btn-luxury-delete:hover {
+            background: #000;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+    .btn-luxury-back {
+        color: var(--luxury-navy);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+        text-decoration: none !important;
+        border-bottom: 1px solid transparent;
+        transition: 0.3s;
+    }
+
+        .btn-luxury-back:hover {
+            color: var(--luxury-gold);
+            border-bottom: 1px solid var(--luxury-gold);
+        }
+</style>
+
+<div class="delete-wrapper">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-8 col-lg-10">
+                <div class="delete-card">
+
+                    <div class="card-header-warning">
+                        <i class="fas fa-trash-alt"></i>
+                        <span class="text-muted small text-uppercase mb-2" style="letter-spacing: 1.5px;">Hành động này không thể hoàn tác</span>
+                        <h3>Xác nhận xóa ý kiến khách hàng</h3>
+                    </div>
+
+                    <div class="card-body-luxury">
+                        <div class="summary-box">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <span class="label-luxury">Khách hàng phản hồi</span>
+                                    <span class="value-luxury">@Model.hoTen</span>
+                                </div>
+                                <div class="col-md-6 text-md-right">
+                                    <span class="label-luxury">Thời gian ghi nhận</span>
+                                    <span class="value-luxury">@Model.ngayGui.ToString("dd/MM/yyyy HH:mm")</span>
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <span class="label-luxury">Nội dung phản hồi</span>
+                                    <div class="feedback-preview">
+                                        "@Model.noiDung"
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <span class="label-luxury">Trạng thái hiện tại</span>
+                                    <span class="value-luxury @(Model.tinhTrang == true ? "text-success" : "text-warning")">
+                                        @(Model.tinhTrang == true ? "Đã ghi nhận & xử lý" : "Đang chờ xử lý")
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="d-flex justify-content-between align-items-center mt-5">
+                                <a href="@Url.Action("Index")" class="btn-luxury-back">
+                                    <i class="fas fa-chevron-left mr-2"></i> Quay lại danh sách
+                                </a>
+
+                                <button type="submit" class="btn btn-luxury-delete shadow-sm">
+                                    Xác nhận gỡ bỏ hồ sơ <i class="fas fa-times-circle ml-2"></i>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
