@@ -1,12 +1,12 @@
-# 🏨WEDSITE ĐẶT PHÒNG KHÁCH SẠN HAOÀNG GIA
+# 🏨WEDSITE ĐẶT PHÒNG KHÁCH SẠN HOÀNG GIA
 ---
 
 ## 👨‍💻 Thông tin sinh viên
 * **Họ và tên:** LÊ MINH NHUT
 * **MSV:**170124697
 * **Lớp:** DK24TTC6
-* ** e-MAIL: nhutlm071092@tvu-onschool.edu.vn
-* ** Điện Thoại-Zalo: 0353303411
+* **e-MAIL: nhutlm071092@tvu-onschool.edu.vn
+* **Điện Thoại-Zalo: 0353303411
 * **Giảng viên hướng dẫn:** TS. Đoàn Phước Miền
 * **Trường:** Đại học Trà Vinh (TVU)
 
